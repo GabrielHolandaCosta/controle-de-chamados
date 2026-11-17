@@ -5,7 +5,6 @@ data/
 chamados.db
 .vercelignore
 # Arquivos antigos mantidos apenas pelo histórico do repositório.
-app.js
 index.html
 style.css
 .env
