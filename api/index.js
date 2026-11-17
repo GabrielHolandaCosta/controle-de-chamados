@@ -1,7 +1,8 @@
 const crypto = require('node:crypto');
 const { neon } = require('@neondatabase/serverless');
 
-const sql = neon(process.env.DATABASE_URL || 'postgresql://missing');
+const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+const sql = neon(databaseUrl || 'postgresql://missing');
 const sessionSecret = process.env.SESSION_SECRET || 'change-this-before-production';
 const adminPassword = process.env.ADMIN_PASSWORD || '123456';
 let schemaReady;
@@ -12,7 +13,7 @@ const send = (response,status,body,headers={}) => { response.status(status).set(
 const tokenFor = user => { const value=Buffer.from(JSON.stringify({id:user.id,username:user.username,role:user.role,exp:Date.now()+8*60*60*1000})).toString('base64url'); const signature=crypto.createHmac('sha256',sessionSecret).update(value).digest('base64url'); return `${value}.${signature}`; };
 const userFrom = request => { const token=cookies(request).session; if(!token)return null; const [value,signature]=token.split('.'); const valid=crypto.createHmac('sha256',sessionSecret).update(value||'').digest('base64url'); if(!signature||!crypto.timingSafeEqual(Buffer.from(signature),Buffer.from(valid)))return null; try { const user=JSON.parse(Buffer.from(value,'base64url').toString()); return user.exp>Date.now()?user:null; } catch { return null; } };
 const requireUser = (request,response) => { const user=userFrom(request); if(!user){send(response,401,{error:'Faça login para continuar.'});return null;} return user; };
-async function ensureSchema(){ if(!process.env.DATABASE_URL)throw new Error('DATABASE_URL não configurada.'); if(!schemaReady)schemaReady=(async()=>{ await sql`CREATE TABLE IF NOT EXISTS users (id BIGSERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`; await sql`CREATE TABLE IF NOT EXISTS calls (user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, content JSONB NOT NULL DEFAULT '{}'::jsonb, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`; const found=await sql`SELECT id FROM users WHERE username='admin'`; if(!found.length)await sql`INSERT INTO users (username,password_hash,role) VALUES ('admin',${hash(adminPassword)},'admin')`; })(); return schemaReady; }
+async function ensureSchema(){ if(!databaseUrl)throw new Error('Banco de dados não configurado.'); if(!schemaReady)schemaReady=(async()=>{ await sql`CREATE TABLE IF NOT EXISTS users (id BIGSERIAL PRIMARY KEY, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user', created_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`; await sql`CREATE TABLE IF NOT EXISTS calls (user_id BIGINT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE, content JSONB NOT NULL DEFAULT '{}'::jsonb, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`; const found=await sql`SELECT id FROM users WHERE username='admin'`; if(!found.length)await sql`INSERT INTO users (username,password_hash,role) VALUES ('admin',${hash(adminPassword)},'admin')`; })(); return schemaReady; }
 
 module.exports = async (request,response) => { try { await ensureSchema(); const route=(request.url || '').split('?')[0];
   if(route==='/api/session'&&request.method==='GET')return send(response,200,{user:userFrom(request)});
