@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Login administrativo</title>
+  <title>Login administrativo</title><link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
@@ -13,7 +13,6 @@
     <a class="brand" href="/loginadm"><span>✓</span> chamados</a>
     <div><p class="eyebrow">ÁREA RESTRITA</p><h1>Entrar no sistema</h1><p class="login-copy">Use suas credenciais para acessar seus chamados salvos no banco de dados.</p></div>
     <form id="loginForm"><label>Usuário<input id="username" autocomplete="username" required placeholder="Seu usuário"></label><label>Senha<input id="password" type="password" autocomplete="current-password" required placeholder="Sua senha"></label><p id="loginError" class="login-error"></p><button class="add-button" type="submit">Entrar →</button></form>
-    <small>Teste: <b>admin</b> / <b>123456</b></small>
   </main>
   <script>document.getElementById('loginForm').onsubmit=async e=>{e.preventDefault();const error=document.getElementById('loginError');error.textContent='';const response=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:username.value,password:password.value})});const data=await response.json();if(!response.ok){error.textContent=data.error;return}location.href=data.user.role==='admin'?'/admin':'/'}</script>
 </body></html>
