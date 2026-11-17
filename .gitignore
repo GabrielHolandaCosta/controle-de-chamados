@@ -1,0 +1,14 @@
+# Dados locais e backups
+data/*.db
+*.db
+*.db-shm
+*.db-wal
+
+# Dependências e variáveis de ambiente
+node_modules/
+.env
+.env.*
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db

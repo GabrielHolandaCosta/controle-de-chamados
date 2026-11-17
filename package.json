@@ -1,0 +1,15 @@
+{
+  "name": "controle-de-chamados",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Sistema de controle de chamados com autenticação e exportação para Excel.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^1.0.1"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
