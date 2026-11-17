@@ -6,9 +6,6 @@
   "scripts": {
     "start": "node server.js"
   },
-  "dependencies": {
-    "@neondatabase/serverless": "^1.0.1"
-  },
   "engines": {
     "node": ">=22.5.0"
   }

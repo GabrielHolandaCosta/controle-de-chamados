@@ -1,28 +1,40 @@
 # Controle de Chamados
 
-Sistema web para registrar e acompanhar chamados técnicos, com autenticação de usuários, área administrativa e exportação de planilhas Excel formatadas.
+Sistema local para registrar chamados técnicos, organizar atendimentos por data e exportar relatórios em Excel.
 
-## Recursos
+## O que o sistema faz
 
-- Registro de atendimentos por data, com cálculo de duração e tempo parado.
-- Filtros, ordenação, importação e exportação de Excel.
-- Área administrativa para criar, editar e excluir usuários.
-- Dados vinculados ao usuário autenticado.
+- Registra atendimentos com solicitante, setor, OS, horários e status.
+- Calcula a duração de cada chamado, o total diário e o tempo parado entre atendimentos.
+- Filtra e ordena os chamados por data e colunas.
+- Importa e exporta planilhas Excel.
+- Possui login e painel administrativo para criar e gerenciar usuários.
+- Salva os dados localmente no banco `data/chamados.db`.
 
-## Executar localmente
+## Como abrir
 
-1. Instale o Node.js 22.5 ou superior.
-2. Execute `npm install` e depois `npm start`.
-3. Acesse `http://localhost:3000/loginadm`.
+1. Instale o Node.js LTS pelo site [nodejs.org](https://nodejs.org/).
+2. Dê dois cliques em `iniciar-servidor.bat`.
+3. Abra `http://localhost:3000/loginadm` no navegador.
 
-### Acesso de teste
+### Login de teste
 
 - Usuário: `admin`
 - Senha: `123456`
 
-## Publicação
+## Estrutura
 
-O projeto está configurado para Vercel com Neon Postgres. Na Vercel, conecte uma integração Neon e defina `DATABASE_URL`, `SESSION_SECRET` e `ADMIN_PASSWORD` nas variáveis de ambiente.
+```text
+public/                 Telas, estilos e scripts do sistema
+data/chamados.db        Banco de dados local
+server.js               Servidor local
+iniciar-servidor.bat    Iniciador para Windows
+package.json            Configuração do Node.js
+```
+
+## Backup
+
+Para guardar os dados, exporte os chamados em Excel e mantenha uma cópia do arquivo `data/chamados.db` com o servidor fechado.
 
 ## Licença
 
