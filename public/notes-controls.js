@@ -63,8 +63,12 @@
     const cssWasEnabled = document.queryCommandState('styleWithCSS');
     if (!cssWasEnabled) document.execCommand('styleWithCSS', false, 'true');
     try {
-      // At the caret, match the white editor background to stop inheriting the previous highlight.
-      const color = typing && value === 'transparent' ? '#ffffff' : value;
+      // At the caret, match the editor background to stop inheriting the previous highlight.
+      const editorColor = getComputedStyle(editor).backgroundColor;
+      const neutralColor = editorColor === 'rgba(0, 0, 0, 0)'
+        ? getComputedStyle(editor.closest('.note-card')).backgroundColor
+        : editorColor;
+      const color = typing && value === 'transparent' ? neutralColor : value;
       if (!document.execCommand(highlightCommand, false, color)) return false;
       if (typing) marker.dataset.typingColor = value;
       return true;
