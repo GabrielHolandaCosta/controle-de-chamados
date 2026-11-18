@@ -136,6 +136,32 @@
   color: #514795;
 }
 
+.note-toolbar { position: relative; }
+.note-highlight-palette summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 6px;
+  color: #514795;
+  font-size: 12px;
+}
+.note-highlight-palette summary::-webkit-details-marker { display: none; }
+.note-highlight-palette[open] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.note-highlight-palette button {
+  padding-inline: 6px;
+  background: var(--highlight-swatch);
+  color: #29243a;
+}
+.note-highlight-palette button:hover { background: var(--highlight-swatch); }
+.note-toolbar button[data-command="hiliteColor"].is-active {
+  background: var(--highlight-swatch, #fff1a8);
+  color: #29243a;
+}
+.note-toolbar button[data-command="hiliteColor"].is-active::after { background: currentColor; }
+
 @media (max-width: 600px) {
   .notes-launcher {
     right: 0;

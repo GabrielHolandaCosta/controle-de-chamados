@@ -1,5 +1,13 @@
 (() => {
   const highlightCommand = document.queryCommandSupported('hiliteColor') ? 'hiliteColor' : 'highlightColor';
+  const colors = [
+    ['Amarelo', '#fff1a8', 'rgb(255, 241, 168)'],
+    ['Verde', '#baf2ca', 'rgb(186, 242, 202)'],
+    ['Vermelho', '#ffc1c1', 'rgb(255, 193, 193)'],
+    ['Azul', '#badcff', 'rgb(186, 220, 255)'],
+    ['Lilás', '#e1ceff', 'rgb(225, 206, 255)'],
+    ['Laranja', '#ffd6aa', 'rgb(255, 214, 170)']
+  ];
 
   function editorRange(editor) {
     const selection = window.getSelection();
@@ -17,6 +25,9 @@
       const editor = button.closest('.note-card').querySelector('.note-body');
       const range = editorRange(editor);
       if (!range) return false;
+      if (range.collapsed && button.dataset.typingColor !== undefined) {
+        return button.dataset.typingColor !== 'transparent';
+      }
       if (range.collapsed) return hasHighlight(range.startContainer, editor);
 
       const walker = document.createTreeWalker(range.commonAncestorContainer, NodeFilter.SHOW_TEXT);
@@ -38,16 +49,35 @@
   function hasHighlight(node, editor) {
     let element = node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement;
     for (; element && element !== editor; element = element.parentElement) {
-      if (element.style.backgroundColor === 'rgb(255, 241, 168)') return true;
+      if (element.style.backgroundColor && element.style.backgroundColor !== 'transparent') {
+        return colors.some(([, , rgb]) => rgb === element.style.backgroundColor);
+      }
     }
     return false;
+  }
+
+  function applyHighlight(editor, marker, value) {
+    const selected = editorRange(editor);
+    if (!selected) return false;
+    const typing = selected.collapsed;
+    const cssWasEnabled = document.queryCommandState('styleWithCSS');
+    if (!cssWasEnabled) document.execCommand('styleWithCSS', false, 'true');
+    try {
+      // At the caret, match the white editor background to stop inheriting the previous highlight.
+      const color = typing && value === 'transparent' ? '#ffffff' : value;
+      if (!document.execCommand(highlightCommand, false, color)) return false;
+      if (typing) marker.dataset.typingColor = value;
+      return true;
+    } finally {
+      if (!cssWasEnabled) document.execCommand('styleWithCSS', false, 'false');
+    }
   }
 
   function refresh(card) {
     const editor = card.querySelector('.note-body');
     if (!editorRange(editor)) return;
 
-    card.querySelectorAll('.note-toolbar button').forEach(button => {
+    card.querySelectorAll('.note-toolbar button[data-command]').forEach(button => {
       let active = false;
       try { active = commandActive(button); } catch {}
       button.classList.toggle('is-active', active);
@@ -73,6 +103,14 @@
     const editor = card.querySelector('.note-body');
     const dragHandle = card.querySelector('.note-drag');
     if (dragHandle) dragHandle.draggable = true;
+    const marker = card.querySelector('[data-command="hiliteColor"]');
+    const palette = document.createElement('details');
+    palette.className = 'note-highlight-palette';
+    const paletteLabel = document.createElement('summary');
+    paletteLabel.textContent = 'Cores ▾';
+    paletteLabel.title = 'Escolher cor do destaque';
+    palette.append(paletteLabel);
+    marker.after(palette);
 
     let savedRange;
     editor.addEventListener('focusout', () => {
@@ -92,7 +130,7 @@
       button.onclick = () => {
         const range = document.activeElement === editor ? editorRange(editor) : savedRange ?? editorRange(editor);
         editor.focus();
-        if (range && editor.contains(range.commonAncestorContainer)) {
+        if (range && range !== editorRange(editor) && editor.contains(range.commonAncestorContainer)) {
           const selection = window.getSelection();
           selection.removeAllRanges();
           selection.addRange(range);
@@ -101,24 +139,14 @@
         const command = button.dataset.command;
         let value = button.dataset.value || null;
         if (command === 'hiliteColor') {
-          const selected = editorRange(editor);
-          if (!selected || selected.collapsed) {
-            hint.textContent = 'Selecione o trecho que quer destacar.';
+          value = button.dataset.chosenColor || (commandActive(button) ? 'transparent' : value);
+          delete button.dataset.chosenColor;
+          if (!applyHighlight(editor, marker, value)) {
+            hint.textContent = 'Clique na área de texto ou selecione um trecho para destacar.';
             hint.hidden = false;
             return;
           }
-          value = commandActive(button) ? 'transparent' : value;
-          const cssWasEnabled = document.queryCommandState('styleWithCSS');
-          if (!cssWasEnabled) document.execCommand('styleWithCSS', false, 'true');
-          try {
-            if (!document.execCommand(highlightCommand, false, value)) {
-              hint.textContent = 'Não foi possível aplicar o destaque neste navegador.';
-              hint.hidden = false;
-              return;
-            }
-          } finally {
-            if (!cssWasEnabled) document.execCommand('styleWithCSS', false, 'false');
-          }
+          if (!editorRange(editor)?.collapsed) delete marker.dataset.typingColor;
         } else {
           if (command === 'formatBlock' && commandActive(button)) value = 'div';
           document.execCommand(command, false, value);
@@ -126,6 +154,27 @@
         saveCard(card);
         refresh(card);
       };
+    });
+
+    colors.forEach(([name, color]) => {
+      const swatch = document.createElement('button');
+      swatch.type = 'button';
+      swatch.textContent = name;
+      swatch.style.setProperty('--highlight-swatch', color);
+      swatch.addEventListener('click', () => {
+        marker.dataset.value = color;
+        marker.dataset.chosenColor = color;
+        marker.style.setProperty('--highlight-swatch', color);
+        palette.open = false;
+        marker.click();
+      });
+      palette.append(swatch);
+    });
+    editor.addEventListener('pointerdown', () => delete marker.dataset.typingColor);
+    editor.addEventListener('keydown', event => {
+      if (event.key.startsWith('Arrow') || ['Home', 'End'].includes(event.key)) {
+        delete marker.dataset.typingColor;
+      }
     });
 
     ['focus', 'keyup', 'mouseup', 'input'].forEach(type => {
