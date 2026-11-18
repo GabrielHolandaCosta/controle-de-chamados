@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="idle.css">
+  <link rel="stylesheet" href="notes.css">
 </head>
 <body>
   <main class="app-shell">
@@ -16,8 +17,17 @@
     <section id="days" class="days"></section>
     <div id="emptyState" class="empty"><span>✦</span><b>Nenhum chamado nesta visualização.</b><p>Escolha uma data acima e adicione o primeiro atendimento.</p></div>
   </main>
+  <button id="notesLauncher" class="notes-launcher" title="Abrir minhas notas"><span>✦</span><b>Notas</b></button>
+  <section id="notesPanel" class="notes-panel" aria-hidden="true">
+    <div class="notes-head"><div><p class="eyebrow">ESPAÇO PESSOAL</p><h2>Minhas notas</h2></div><button id="closeNotes" class="notes-close" aria-label="Fechar notas">×</button></div>
+    <div class="notes-actions"><button id="newNote" class="notes-new">+ Nova nota</button><span id="notesSaveStatus">Suas notas ficam salvas na conta</span></div>
+    <div id="notesList" class="notes-list"></div>
+    <p class="notes-hint">Arraste as notas pelo ícone ⠿ para reorganizar. Use a barra de edição para destacar, estruturar ou criar listas.</p>
+  </section>
+  <div id="notesBackdrop" class="notes-backdrop"></div>
   <template id="dayTemplate"><section class="day-card"><div class="day-head"><div><p class="eyebrow">ATENDIMENTOS DO DIA</p><h2 class="day-title"></h2></div><div class="day-summary"><span class="day-count"></span><strong class="day-total"></strong><button class="export-button">Exportar CSV ↓</button><button class="clear-day" title="Apagar chamados deste dia">×</button></div></div><div class="table-scroll"><table><thead><tr><th>ATENDIMENTO REALIZADOS</th><th>SOLICITANTE</th><th>SETOR SOLICITANTE</th><th>CHAMADO ABERTO</th><th>INÍCIO</th><th>FINAL</th><th>OS</th><th>TOTAL <button class="idle-toggle" title="Mostrar tempo parado" aria-label="Mostrar tempo parado">⌄</button></th><th class="idle-head" hidden>TEMPO PARADO</th><th></th></tr></thead><tbody></tbody><tfoot><tr><td colspan="7">TOTAL DO DIA</td><td class="footer-total">00:00</td><td class="idle-footer" hidden>PARADO: 00:00</td><td></td></tr></tfoot></table></div></section></template>
   <template id="rowTemplate"><tr><td><input data-field="service" placeholder="Descreva o atendimento"></td><td><input data-field="requester" placeholder="Nome"></td><td><input data-field="department" placeholder="Setor"></td><td><select data-field="opened"><option value="SIM">SIM</option><option value="NÃO">NÃO</option></select></td><td><input data-field="start" type="time"></td><td><input data-field="end" type="time"></td><td><input data-field="os" placeholder="Nº da OS"></td><td class="duration">00:00</td><td class="idle-cell" hidden>—</td><td><button class="delete-row" title="Remover linha">×</button></td></tr></template>
   <script src="app.js"></script>
+  <script src="notes.js"></script>
 </body>
 </html>
