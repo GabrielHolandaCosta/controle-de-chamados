@@ -178,7 +178,7 @@
       const response = await originalFetch(input, options);
       if (response.status === 401 && url.origin === location.origin && url.pathname.startsWith('/api/')) {
         redirectToLogin();
-      } else if (protectedRequest && response.ok) {
+      } else if (protectedRequest && (response.ok || response.status === 423)) {
         removeDraft(url.pathname, draftRequestId);
       }
       return response;
