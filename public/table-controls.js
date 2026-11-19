@@ -35,6 +35,12 @@
       value: row => clockValue(row.end),
       labels: { desc: 'Finais mais recentes primeiro', asc: 'Finais mais antigos primeiro' }
     },
+    os: {
+      title: 'OS',
+      initial: 'asc',
+      value: row => row.os?.trim() || null,
+      labels: { asc: 'OS do menor para o maior', desc: 'OS do maior para o menor' }
+    },
     duration: {
       title: 'Total',
       initial: 'desc',
