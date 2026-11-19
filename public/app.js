@@ -6,7 +6,7 @@ appScript.onload = () => {
   tableControls.src = '/table-controls.js?v=4';
   tableControls.onload = () => {
     const rowLocks = document.createElement('script');
-    rowLocks.src = '/row-locks.js?v=1';
+    rowLocks.src = '/row-locks.js?v=2';
     document.head.append(rowLocks);
   };
   document.head.append(tableControls);

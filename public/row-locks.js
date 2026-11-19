@@ -18,7 +18,9 @@
     button.setAttribute('aria-pressed', String(locked));
     button.title = locked ? 'Desbloquear este chamado' : 'Bloquear este chamado';
     button.setAttribute('aria-label', button.title);
-    button.querySelector('span').textContent = locked ? '●' : '○';
+    const icon = button.querySelector('span');
+    const nextIcon = locked ? '●' : '○';
+    if (icon.textContent !== nextIcon) icon.textContent = nextIcon;
     element.querySelectorAll('input, select, .delete-row, .row-drag').forEach(control => {
       control.disabled = locked;
     });
@@ -120,6 +122,6 @@
   dialog.addEventListener('close', () => { pendingUnlock = null; });
 
   const observer = new MutationObserver(enhanceRows);
-  observer.observe(document.getElementById('days'), { childList: true, subtree: true });
+  observer.observe(document.getElementById('days'), { childList: true });
   enhanceRows();
 })();
