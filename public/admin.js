@@ -1,6 +1,6 @@
 const themeStyle = document.createElement('link');
 themeStyle.rel = 'stylesheet';
-themeStyle.href = '/theme.css?v=1';
+themeStyle.href = '/theme.css?v=2';
 document.head.append(themeStyle);
 const themeScript = document.createElement('script');
 themeScript.src = '/theme.js?v=1';

@@ -17,4 +17,13 @@ html[data-theme="dark"] .note-toolbar{background:#181b23;border-color:#303541}ht
 html[data-theme="dark"] .note-toolbar .clear-format::before{background:#3b404c}html[data-theme="dark"] .note-highlight-palette summary{color:#b6afff}html[data-theme="dark"] .note-body{color:#e0e4eb;background:transparent}html[data-theme="dark"] .note-body:empty::before{color:#707988}html[data-theme="dark"] .note-bottom,html[data-theme="dark"] .notes-hint,html[data-theme="dark"] .notes-actions span{color:#858e9d}html[data-theme="dark"] .note-tools button:hover{background:#292d39;color:#b5adff}
 html[data-theme="dark"] .login-page{background:radial-gradient(circle at 30% 10%,#252641,#11141b 48%,#0c0e13)}html[data-theme="dark"] .login-copy,html[data-theme="dark"] .login-card small,html[data-theme="dark"] .admin-intro p{color:#9aa3b2}html[data-theme="dark"] .login-card label,html[data-theme="dark"] .admin-form label{color:#c1c7d1}
 html[data-theme="dark"] .user-table th,html[data-theme="dark"] .user-table td{background:#1a1e27;border-color:#303641;color:#e5e8ed}html[data-theme="dark"] .role{background:#302d54;color:#bcb5ff}html[data-theme="dark"] .action{background:#173523;color:#72da91}html[data-theme="dark"] .action.delete{background:#3b2028;color:#ff91a0}
+html[data-theme="dark"] select option,html[data-theme="dark"] select optgroup{background:#20242e;color:#f5f7fa}
+html[data-theme="dark"] select option:checked{background:#655dd0;color:#fff}
+html[data-theme="dark"] input:-webkit-autofill,html[data-theme="dark"] input:-webkit-autofill:hover,html[data-theme="dark"] input:-webkit-autofill:focus{-webkit-text-fill-color:#edf0f4;box-shadow:0 0 0 1000px #13161d inset;caret-color:#edf0f4}
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.72;cursor:pointer}
+html[data-theme="dark"] ::selection{background:#7168df;color:#fff}
+html[data-theme="dark"] .delete-row{color:#aab2c0}html[data-theme="dark"] .delete-row:hover{color:#ff8595}
+html[data-theme="dark"] .idle-toggle{color:#aeb6c3}html[data-theme="dark"] .idle-toggle:hover{color:#b5aeff}
+html[data-theme="dark"] .note-drag,html[data-theme="dark"] .note-tools button{color:#aab2c0}
+html[data-theme="dark"] *{scrollbar-color:#454b5a #151820}
 @media(max-width:600px){.theme-toggle-label{display:none}.theme-toggle{width:34px;padding:0;justify-content:center}.header-actions{gap:8px}.theme-toggle-fixed{top:12px;right:12px}}
