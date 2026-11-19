@@ -4,6 +4,11 @@
   let draggedRow = null;
 
   const definitions = {
+    requester: {
+      initial: 'asc',
+      value: row => row.requester?.trim() || null,
+      labels: { asc: 'Solicitantes de A a Z', desc: 'Solicitantes de Z a A' }
+    },
     department: {
       initial: 'asc',
       value: row => row.department?.trim() || null,
@@ -49,21 +54,31 @@
     records[date] = nextRows;
     try {
       await persist();
-      render();
+      return true;
     } catch {
       records[date] = previousRows;
       document.getElementById('saveStatus').textContent = 'Não foi possível salvar a nova ordem.';
-      render();
+      return false;
     }
   }
 
   async function sortDay(date, key) {
     const definition = definitions[key];
     const current = sortStates.get(date);
+    const previousRows = [...records[date]];
+    const previousState = current || null;
+    if (current?.key === key && current.direction !== definition.initial) {
+      sortStates.delete(date);
+      if (!await saveOrder(date, [...current.baseline], previousRows)) {
+        sortStates.set(date, current);
+      }
+      render();
+      return;
+    }
     const direction = current?.key === key
       ? current.direction === 'asc' ? 'desc' : 'asc'
       : definition.initial;
-    const previousRows = [...records[date]];
+    const baseline = current?.key === key ? current.baseline : previousRows;
     const nextRows = previousRows
       .map((row, index) => ({ row, index }))
       .sort((left, right) => {
@@ -75,8 +90,12 @@
         return compared || left.index - right.index;
       })
       .map(item => item.row);
-    sortStates.set(date, { key, direction });
-    await saveOrder(date, nextRows, previousRows);
+    sortStates.set(date, { key, direction, baseline });
+    if (!await saveOrder(date, nextRows, previousRows)) {
+      if (previousState) sortStates.set(date, previousState);
+      else sortStates.delete(date);
+    }
+    render();
   }
 
   function updateSortButtons(card, date) {
@@ -109,11 +128,15 @@
     if (fromIndex < insertionIndex) insertionIndex -= 1;
     if (insertionIndex === fromIndex) return;
     const previousRows = [...records[date]];
+    const previousState = sortStates.get(date) || null;
     const nextRows = [...previousRows];
     const [moved] = nextRows.splice(fromIndex, 1);
     nextRows.splice(insertionIndex, 0, moved);
     sortStates.delete(date);
-    await saveOrder(date, nextRows, previousRows);
+    if (!await saveOrder(date, nextRows, previousRows) && previousState) {
+      sortStates.set(date, previousState);
+    }
+    render();
   }
 
   function enhanceRow(row, card, date, index) {
