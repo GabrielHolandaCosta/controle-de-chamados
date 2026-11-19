@@ -27,3 +27,7 @@ html[data-theme="dark"] .idle-toggle{color:#aeb6c3}html[data-theme="dark"] .idle
 html[data-theme="dark"] .note-drag,html[data-theme="dark"] .note-tools button{color:#aab2c0}
 html[data-theme="dark"] *{scrollbar-color:#454b5a #151820}
 @media(max-width:600px){.theme-toggle-label{display:none}.theme-toggle{width:34px;padding:0;justify-content:center}.header-actions{gap:8px}.theme-toggle-fixed{top:12px;right:12px}}
+
+.empty .empty-icon{width:44px;height:44px;margin-bottom:5px;display:grid;place-items:center;border-radius:13px;background:#eceafd;color:#6257db;box-shadow:0 8px 22px rgba(98,87,219,.13)}
+.empty .empty-icon svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+html[data-theme="dark"] .empty .empty-icon{background:#24243b;color:#a99fff;box-shadow:0 9px 24px rgba(0,0,0,.22)}
