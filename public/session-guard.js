@@ -11,6 +11,7 @@
   let redirecting = false;
   let overlayElement = null;
   let draftSequence = 0;
+  const inFlightDrafts = new Set();
 
   function storageGet(key) {
     try { return localStorage.getItem(key); } catch { return null; }
@@ -114,7 +115,7 @@
         if (!raw) return null;
         try { return { pathname, type, draft: JSON.parse(raw) }; } catch { return null; }
       })
-      .filter(Boolean);
+      .filter(item => item && !inFlightDrafts.has(item.draft.requestId));
     if (!pending.length) return false;
 
     restoring = true;
@@ -133,8 +134,8 @@
         if (!response.ok) throw new Error('Falha ao recuperar rascunho');
         storageRemove(draftKey(item.type, username));
       }
-      location.reload();
-      return true;
+      hideOverlay();
+      return false;
     } catch {
       showOverlay('A atualização ainda está terminando. Seus dados continuam protegidos.');
       restoring = false;
@@ -172,6 +173,7 @@
     const { url, method } = requestDetails(input, options);
     const protectedRequest = url.origin === location.origin && draftTypes[url.pathname] && method === 'PUT';
     const draftRequestId = protectedRequest ? rememberDraft(url.pathname, options) : null;
+    if (draftRequestId) inFlightDrafts.add(draftRequestId);
     try {
       const response = await originalFetch(input, options);
       if (response.status === 401 && url.origin === location.origin && url.pathname.startsWith('/api/')) {
@@ -186,6 +188,8 @@
         setTimeout(checkSession, 700);
       }
       throw error;
+    } finally {
+      if (draftRequestId) inFlightDrafts.delete(draftRequestId);
     }
   };
 

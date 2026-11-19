@@ -14,7 +14,7 @@
   <link rel="stylesheet" href="session-guard.css?v=1">
   <link rel="stylesheet" href="mobile.css?v=1">
   <script src="theme.js?v=1"></script>
-  <script src="session-guard.js?v=1"></script>
+  <script src="session-guard.js?v=2"></script>
 </head>
 <body>
   <main class="app-shell">
@@ -37,7 +37,7 @@
   <div id="notesBackdrop" class="notes-backdrop"></div>
   <template id="dayTemplate"><section class="day-card"><div class="day-head"><div><p class="eyebrow">ATENDIMENTOS DO DIA</p><h2 class="day-title"></h2></div><div class="day-summary"><span class="day-count"></span><strong class="day-total"></strong><button class="export-button">Exportar CSV ↓</button><button class="clear-day" title="Apagar chamados deste dia">×</button></div></div><div class="table-scroll"><table><thead><tr><th>ATENDIMENTO REALIZADOS</th><th>SOLICITANTE <button class="sort-toggle" data-sort="requester" type="button"><span class="sort-arrow">↕</span></button></th><th>SETOR SOLICITANTE <button class="sort-toggle" data-sort="department" type="button"><span class="sort-arrow">↕</span></button></th><th>CHAMADO ABERTO <button class="sort-toggle" data-sort="opened" type="button"><span class="sort-arrow">↕</span></button></th><th>INÍCIO <button class="sort-toggle" data-sort="start" type="button"><span class="sort-arrow">↕</span></button></th><th>FINAL <button class="sort-toggle" data-sort="end" type="button"><span class="sort-arrow">↕</span></button></th><th>OS</th><th>TOTAL <button class="sort-toggle" data-sort="duration" type="button"><span class="sort-arrow">↕</span></button><button class="idle-toggle" title="Mostrar tempo parado" aria-label="Mostrar tempo parado">⌄</button></th><th class="idle-head" hidden>TEMPO PARADO</th><th></th></tr></thead><tbody></tbody><tfoot><tr><td colspan="7">TOTAL DO DIA</td><td class="footer-total">00:00</td><td class="idle-footer" hidden>PARADO: 00:00</td><td></td></tr></tfoot></table></div></section></template>
   <template id="rowTemplate"><tr><td data-label="Atendimento realizado"><button class="row-drag" type="button" title="Arrastar atendimento" aria-label="Arrastar atendimento">⠿</button><input data-field="service" placeholder="Descreva o atendimento"></td><td data-label="Solicitante"><input data-field="requester" placeholder="Nome"></td><td data-label="Setor solicitante"><input data-field="department" placeholder="Setor"></td><td data-label="Chamado aberto"><select data-field="opened"><option value="SIM">SIM</option><option value="NÃO">NÃO</option></select></td><td data-label="Início"><input data-field="start" type="time"></td><td data-label="Final"><input data-field="end" type="time"></td><td data-label="OS"><input data-field="os" placeholder="Nº da OS"></td><td class="duration" data-label="Total">00:00</td><td class="idle-cell" data-label="Tempo parado" hidden>—</td><td><button class="delete-row" title="Remover linha" aria-label="Remover atendimento">×</button></td></tr></template>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=5"></script>
   <script src="notes.js"></script>
   <script src="notes-controls.js?v=4"></script>
 </body>
