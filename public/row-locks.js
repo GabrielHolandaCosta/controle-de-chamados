@@ -1,6 +1,7 @@
 (() => {
   let pendingUnlock = null;
   let pendingDelete = null;
+  let pendingDayDelete = null;
   let assigningIds = false;
   const dialog = document.getElementById('rowUnlockDialog');
   const label = document.getElementById('rowUnlockLabel');
@@ -8,6 +9,10 @@
   const deleteDialog = document.getElementById('rowDeleteDialog');
   const deleteLabel = document.getElementById('rowDeleteLabel');
   const confirmDeleteButton = document.getElementById('confirmRowDelete');
+  const dayDeleteDialog = document.getElementById('dayDeleteDialog');
+  const dayDeleteLabel = document.getElementById('dayDeleteLabel');
+  const dayDeleteCount = document.getElementById('dayDeleteCount');
+  const confirmDayDeleteButton = document.getElementById('confirmDayDelete');
 
   function newId() {
     return crypto.randomUUID?.() || 'call-' + Date.now() + '-' + Math.random().toString(16).slice(2);
@@ -105,6 +110,16 @@
         card.querySelector('.row-lock.is-locked')?.focus();
         return;
       }
+      if (date && records[date]) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        pendingDayDelete = date;
+        const amount = records[date].length;
+        dayDeleteCount.textContent = `${amount} ${amount === 1 ? 'chamado' : 'chamados'}`;
+        dayDeleteLabel.textContent = card.querySelector('.day-title')?.textContent || date;
+        dayDeleteDialog.showModal();
+        return;
+      }
     }
     const actionButton = event.target.closest('button');
     if (actionButton?.textContent.includes('Importar Excel') && Object.values(records).flat().some(row => row._locked)) {
@@ -159,8 +174,28 @@
     }
   });
 
+  confirmDayDeleteButton.addEventListener('click', async event => {
+    event.preventDefault();
+    const date = pendingDayDelete;
+    pendingDayDelete = null;
+    dayDeleteDialog.close();
+    if (!date || !records[date]) return;
+    const backup = records[date];
+    delete records[date];
+    try {
+      await persist();
+      render();
+      document.getElementById('saveStatus').textContent = 'Chamados do dia excluídos ✓';
+    } catch {
+      records[date] = backup;
+      render();
+      document.getElementById('saveStatus').textContent = 'Não foi possível apagar os chamados deste dia.';
+    }
+  });
+
   dialog.addEventListener('close', () => { pendingUnlock = null; });
   deleteDialog.addEventListener('close', () => { pendingDelete = null; });
+  dayDeleteDialog.addEventListener('close', () => { pendingDayDelete = null; });
 
   const observer = new MutationObserver(enhanceRows);
   observer.observe(document.getElementById('days'), { childList: true });

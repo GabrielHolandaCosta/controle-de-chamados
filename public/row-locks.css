@@ -6,29 +6,32 @@
 tr.is-locked td{background:#dfe7e1}
 tr.is-locked input,tr.is-locked select{cursor:not-allowed;opacity:.72}
 tr.is-locked .row-drag,tr.is-locked .delete-row{cursor:not-allowed;opacity:.28}
-.row-unlock-dialog,.row-delete-dialog{width:min(430px,calc(100vw - 28px));padding:0;border:1px solid #dddfe4;border-radius:20px;background:#fff;color:#171a23;box-shadow:0 28px 90px rgba(16,20,30,.28)}
-.row-unlock-dialog::backdrop,.row-delete-dialog::backdrop{background:rgba(15,18,27,.58);backdrop-filter:blur(4px)}
-.row-unlock-dialog form,.row-delete-dialog form{display:grid;grid-template-columns:54px 1fr;gap:16px;padding:25px}
+.row-unlock-dialog,.row-delete-dialog,.day-delete-dialog{width:min(430px,calc(100vw - 28px));padding:0;border:1px solid #dddfe4;border-radius:20px;background:#fff;color:#171a23;box-shadow:0 28px 90px rgba(16,20,30,.28)}
+.row-unlock-dialog::backdrop,.row-delete-dialog::backdrop,.day-delete-dialog::backdrop{background:rgba(15,18,27,.58);backdrop-filter:blur(4px)}
+.row-unlock-dialog form,.row-delete-dialog form,.day-delete-dialog form{display:grid;grid-template-columns:54px 1fr;gap:16px;padding:25px}
 .row-unlock-icon{width:54px;height:54px;border-radius:15px;background:#fff3d4;color:#9a6500;display:grid;place-items:center}
 .row-unlock-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.row-delete-icon{width:54px;height:54px;border-radius:15px;background:#ffeaed;color:#c43f53;display:grid;place-items:center}
-.row-delete-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.row-unlock-dialog h2,.row-delete-dialog h2{margin:0;font:800 22px Manrope;letter-spacing:-.7px}
-.row-unlock-text,.row-delete-text{margin:8px 0 0;color:#6f7580;font-size:13px;line-height:1.55}
-.row-unlock-actions,.row-delete-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
-.row-unlock-actions button,.row-delete-actions button{min-height:42px;border-radius:10px;font:700 12px "DM Sans";cursor:pointer}
+.row-delete-icon,.day-delete-icon{width:54px;height:54px;border-radius:15px;background:#ffeaed;color:#c43f53;display:grid;place-items:center}
+.row-delete-icon svg,.day-delete-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.row-unlock-dialog h2,.row-delete-dialog h2,.day-delete-dialog h2{margin:0;font:800 22px Manrope;letter-spacing:-.7px}
+.row-unlock-text,.row-delete-text,.day-delete-text{margin:8px 0 0;color:#6f7580;font-size:13px;line-height:1.55}
+.row-unlock-actions,.row-delete-actions,.day-delete-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+.row-unlock-actions button,.row-delete-actions button,.day-delete-actions button{min-height:42px;border-radius:10px;font:700 12px "DM Sans";cursor:pointer}
 .row-unlock-cancel{border:1px solid #d9dee2;background:#fff;color:#626975}
 .row-unlock-confirm{border:0;background:#6257db;color:#fff}
 .row-unlock-confirm:hover{background:#5146c7}
 .row-delete-cancel{border:1px solid #d9dee2;background:#fff;color:#626975}
 .row-delete-confirm{border:0;background:#d94b60;color:#fff}
 .row-delete-confirm:hover{background:#bd354a}
+.day-delete-cancel{border:1px solid #d9dee2;background:#fff;color:#626975}
+.day-delete-confirm{border:0;background:#d94b60;color:#fff}
+.day-delete-confirm:hover{background:#bd354a}
 html[data-theme="dark"] tr.is-locked td{background:#25372c!important}
 html[data-theme="dark"] .row-lock{color:#aab1bc}
 html[data-theme="dark"] .row-lock.is-locked{background:#493a1d;color:#ffd987}
-html[data-theme="dark"] .row-unlock-dialog,html[data-theme="dark"] .row-delete-dialog{border-color:#3b424e;background:#1b1f27;color:#f1f3f6}
+html[data-theme="dark"] .row-unlock-dialog,html[data-theme="dark"] .row-delete-dialog,html[data-theme="dark"] .day-delete-dialog{border-color:#3b424e;background:#1b1f27;color:#f1f3f6}
 html[data-theme="dark"] .row-unlock-icon{background:#3d321c;color:#ffd987}
-html[data-theme="dark"] .row-delete-icon{background:#49252c;color:#ff9aaa}
-html[data-theme="dark"] .row-unlock-text,html[data-theme="dark"] .row-delete-text{color:#aeb5c0}
-html[data-theme="dark"] .row-unlock-cancel,html[data-theme="dark"] .row-delete-cancel{border-color:#424955;background:#232832;color:#d7dbe2}
-@media(max-width:700px){tbody tr.call-row.is-locked{border-color:#b38a38;background:#314735;box-shadow:0 8px 22px rgba(0,0,0,.12)}tbody tr.call-row td:first-child input{padding-right:88px}tbody tr.call-row td:last-child{right:10px}.row-actions{gap:5px}.row-lock,.delete-row{width:36px;height:36px}.row-unlock-dialog form,.row-delete-dialog form{grid-template-columns:44px 1fr;padding:20px;gap:13px}.row-unlock-icon,.row-delete-icon{width:44px;height:44px;border-radius:13px}.row-unlock-actions,.row-delete-actions{grid-template-columns:1fr}.row-unlock-confirm,.row-delete-confirm{grid-row:1}.row-unlock-cancel,.row-delete-cancel{grid-row:2}}
+html[data-theme="dark"] .row-delete-icon,html[data-theme="dark"] .day-delete-icon{background:#49252c;color:#ff9aaa}
+html[data-theme="dark"] .row-unlock-text,html[data-theme="dark"] .row-delete-text,html[data-theme="dark"] .day-delete-text{color:#aeb5c0}
+html[data-theme="dark"] .row-unlock-cancel,html[data-theme="dark"] .row-delete-cancel,html[data-theme="dark"] .day-delete-cancel{border-color:#424955;background:#232832;color:#d7dbe2}
+@media(max-width:700px){tbody tr.call-row.is-locked{border-color:#b38a38;background:#314735;box-shadow:0 8px 22px rgba(0,0,0,.12)}tbody tr.call-row td:first-child input{padding-right:88px}tbody tr.call-row td:last-child{right:10px}.row-actions{gap:5px}.row-lock,.delete-row{width:36px;height:36px}.row-unlock-dialog form,.row-delete-dialog form,.day-delete-dialog form{grid-template-columns:44px 1fr;padding:20px;gap:13px}.row-unlock-icon,.row-delete-icon,.day-delete-icon{width:44px;height:44px;border-radius:13px}.row-unlock-actions,.row-delete-actions,.day-delete-actions{grid-template-columns:1fr}.row-unlock-confirm,.row-delete-confirm,.day-delete-confirm{grid-row:1}.row-unlock-cancel,.row-delete-cancel,.day-delete-cancel{grid-row:2}}
