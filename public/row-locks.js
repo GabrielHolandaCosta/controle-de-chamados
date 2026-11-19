@@ -1,9 +1,13 @@
 (() => {
   let pendingUnlock = null;
+  let pendingDelete = null;
   let assigningIds = false;
   const dialog = document.getElementById('rowUnlockDialog');
   const label = document.getElementById('rowUnlockLabel');
   const confirmButton = document.getElementById('confirmRowUnlock');
+  const deleteDialog = document.getElementById('rowDeleteDialog');
+  const deleteLabel = document.getElementById('rowDeleteLabel');
+  const confirmDeleteButton = document.getElementById('confirmRowDelete');
 
   function newId() {
     return crypto.randomUUID?.() || 'call-' + Date.now() + '-' + Math.random().toString(16).slice(2);
@@ -77,6 +81,19 @@
   }
 
   document.addEventListener('click', event => {
+    const deleteButton = event.target.closest('.delete-row');
+    if (deleteButton && !deleteButton.disabled) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const element = deleteButton.closest('tr');
+      const callId = element?.dataset.callId;
+      const found = callId ? findRow(callId) : null;
+      if (!found) return;
+      pendingDelete = callId;
+      deleteLabel.textContent = found.row.service?.trim() ? `“${found.row.service.trim()}”` : 'sem descrição';
+      deleteDialog.showModal();
+      return;
+    }
     const clearButton = event.target.closest('.clear-day');
     if (clearButton) {
       const card = clearButton.closest('.day-card');
@@ -119,7 +136,31 @@
     if (callId) setLocked(callId, false);
   });
 
+  confirmDeleteButton.addEventListener('click', async event => {
+    event.preventDefault();
+    const callId = pendingDelete;
+    pendingDelete = null;
+    deleteDialog.close();
+    const found = callId ? findRow(callId) : null;
+    if (!found) return;
+    const removed = found.row;
+    records[found.date].splice(found.index, 1);
+    const removedDate = records[found.date].length === 0;
+    if (removedDate) delete records[found.date];
+    try {
+      await persist();
+      render();
+      document.getElementById('saveStatus').textContent = 'Chamado excluído ✓';
+    } catch {
+      if (removedDate) records[found.date] = [];
+      records[found.date].splice(found.index, 0, removed);
+      render();
+      document.getElementById('saveStatus').textContent = 'Não foi possível excluir o chamado.';
+    }
+  });
+
   dialog.addEventListener('close', () => { pendingUnlock = null; });
+  deleteDialog.addEventListener('close', () => { pendingDelete = null; });
 
   const observer = new MutationObserver(enhanceRows);
   observer.observe(document.getElementById('days'), { childList: true });
