@@ -1,0 +1,28 @@
+.row-actions{display:flex;align-items:center;justify-content:center;gap:2px}
+.day-card th:last-child{width:66px;min-width:66px}
+.row-lock{width:28px;height:28px;padding:0;border:0;border-radius:8px;background:transparent;color:#8b9295;display:grid;place-items:center;cursor:pointer;transition:.2s}
+.row-lock:hover{background:#fff2cf;color:#946000}
+.row-lock.is-locked{background:#fff0bf;color:#8a5900;box-shadow:0 0 0 2px rgba(218,162,50,.17)}
+tr.is-locked td{background:#dfe7e1}
+tr.is-locked input,tr.is-locked select{cursor:not-allowed;opacity:.72}
+tr.is-locked .row-drag,tr.is-locked .delete-row{cursor:not-allowed;opacity:.28}
+.row-unlock-dialog{width:min(430px,calc(100vw - 28px));padding:0;border:1px solid #dddfe4;border-radius:20px;background:#fff;color:#171a23;box-shadow:0 28px 90px rgba(16,20,30,.28)}
+.row-unlock-dialog::backdrop{background:rgba(15,18,27,.58);backdrop-filter:blur(4px)}
+.row-unlock-dialog form{display:grid;grid-template-columns:54px 1fr;gap:16px;padding:25px}
+.row-unlock-icon{width:54px;height:54px;border-radius:15px;background:#fff3d4;color:#9a6500;display:grid;place-items:center}
+.row-unlock-icon svg{width:27px;height:27px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.row-unlock-dialog h2{margin:0;font:800 22px Manrope;letter-spacing:-.7px}
+.row-unlock-text{margin:8px 0 0;color:#6f7580;font-size:13px;line-height:1.55}
+.row-unlock-actions{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:8px}
+.row-unlock-actions button{min-height:42px;border-radius:10px;font:700 12px "DM Sans";cursor:pointer}
+.row-unlock-cancel{border:1px solid #d9dee2;background:#fff;color:#626975}
+.row-unlock-confirm{border:0;background:#6257db;color:#fff}
+.row-unlock-confirm:hover{background:#5146c7}
+html[data-theme="dark"] tr.is-locked td{background:#25372c!important}
+html[data-theme="dark"] .row-lock{color:#aab1bc}
+html[data-theme="dark"] .row-lock.is-locked{background:#493a1d;color:#ffd987}
+html[data-theme="dark"] .row-unlock-dialog{border-color:#3b424e;background:#1b1f27;color:#f1f3f6}
+html[data-theme="dark"] .row-unlock-icon{background:#3d321c;color:#ffd987}
+html[data-theme="dark"] .row-unlock-text{color:#aeb5c0}
+html[data-theme="dark"] .row-unlock-cancel{border-color:#424955;background:#232832;color:#d7dbe2}
+@media(max-width:700px){tbody tr.call-row.is-locked{border-color:#b38a38;background:#314735;box-shadow:0 8px 22px rgba(0,0,0,.12)}tbody tr.call-row td:first-child input{padding-right:88px}tbody tr.call-row td:last-child{right:10px}.row-actions{gap:5px}.row-lock,.delete-row{width:36px;height:36px}.row-unlock-dialog form{grid-template-columns:44px 1fr;padding:20px;gap:13px}.row-unlock-icon{width:44px;height:44px;border-radius:13px}.row-unlock-actions{grid-template-columns:1fr}.row-unlock-confirm{grid-row:1}.row-unlock-cancel{grid-row:2}}

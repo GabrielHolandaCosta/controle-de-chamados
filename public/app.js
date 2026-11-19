@@ -5,9 +5,9 @@ appScript.onload = () => {
   const tableControls = document.createElement('script');
   tableControls.src = '/table-controls.js?v=4';
   tableControls.onload = () => {
-    const dayLocks = document.createElement('script');
-    dayLocks.src = '/day-locks.js?v=1';
-    document.head.append(dayLocks);
+    const rowLocks = document.createElement('script');
+    rowLocks.src = '/row-locks.js?v=1';
+    document.head.append(rowLocks);
   };
   document.head.append(tableControls);
 };
