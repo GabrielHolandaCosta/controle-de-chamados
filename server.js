@@ -9,6 +9,7 @@ const projectRoot = __dirname;
 const publicRoot = path.join(projectRoot, 'public');
 const db = new DatabaseSync(path.join(projectRoot, 'data', 'chamados.db'));
 const sessions = new Map();
+const instanceId = crypto.randomUUID();
 db.exec(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT UNIQUE NOT NULL, password_hash TEXT NOT NULL, role TEXT NOT NULL DEFAULT 'user', created_at TEXT NOT NULL);`);
 db.exec(`CREATE TABLE IF NOT EXISTS calls (user_id INTEGER PRIMARY KEY, content TEXT NOT NULL DEFAULT '{}', updated_at TEXT NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id));`);
 db.exec(`CREATE TABLE IF NOT EXISTS notes (user_id INTEGER PRIMARY KEY, content TEXT NOT NULL DEFAULT '[]', updated_at TEXT NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id));`);
@@ -25,7 +26,7 @@ function staticFile(res, file) { const target=path.join(publicRoot,file); if(!ta
 
 const server=http.createServer(async(req,res)=>{ const url=new URL(req.url,`http://${req.headers.host}`), route=url.pathname;
   try {
-    if(route==='/api/session'&&req.method==='GET'){const user=userFrom(req); return send(res,200,{user:user||null});}
+    if(route==='/api/session'&&req.method==='GET'){const user=userFrom(req); return send(res,200,{user:user||null,instanceId});}
     if(route==='/api/login'&&req.method==='POST'){const {username,password}=await readBody(req);const user=db.prepare('SELECT id,username,role,password_hash FROM users WHERE username=?').get(String(username||'').trim());if(!user||user.password_hash!==hash(String(password||'')))return send(res,401,{error:'Usuário ou senha inválidos.'});const token=crypto.randomBytes(32).toString('hex');sessions.set(token,{id:user.id,username:user.username,role:user.role});res.writeHead(200,{'Content-Type':'application/json; charset=utf-8','Set-Cookie':`session=${token}; HttpOnly; SameSite=Lax; Path=/; Max-Age=28800`});return res.end(JSON.stringify({user:{username:user.username,role:user.role}}));}
     if(route==='/api/logout'&&req.method==='POST'){const token=(req.headers.cookie||'').match(/session=([^;]+)/)?.[1];if(token)sessions.delete(token);res.writeHead(204,{'Set-Cookie':'session=; HttpOnly; SameSite=Lax; Path=/; Max-Age=0'});return res.end();}
     if(route==='/api/calls'&&req.method==='GET'){const user=requireUser(req,res);if(!user)return;const record=db.prepare('SELECT content FROM calls WHERE user_id=?').get(user.id);return send(res,200,{records:record?JSON.parse(record.content):{}});}

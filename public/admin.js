@@ -4,7 +4,16 @@ themeStyle.href = '/theme.css?v=2';
 document.head.append(themeStyle);
 const themeScript = document.createElement('script');
 themeScript.src = '/theme.js?v=1';
+themeScript.async = false;
 document.head.append(themeScript);
+const guardStyle = document.createElement('link');
+guardStyle.rel = 'stylesheet';
+guardStyle.href = '/session-guard.css?v=1';
+document.head.append(guardStyle);
+const guardScript = document.createElement('script');
+guardScript.src = '/session-guard.js?v=1';
+guardScript.async = false;
+document.head.append(guardScript);
 
 const adminScript = document.createElement('script');
 adminScript.src = '/assets/js/admin.js';
