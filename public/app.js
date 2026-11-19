@@ -1,5 +1,5 @@
 const appScript = document.createElement('script');
-appScript.src = '/assets/js/app.js?v=2';
+appScript.src = '/assets/js/app.js?v=3';
 appScript.async = false;
 appScript.onload = () => {
   const tableControls = document.createElement('script');
