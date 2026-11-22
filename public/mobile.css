@@ -1,3 +1,24 @@
+.day-card .table-scroll[hidden] {
+  display: none;
+}
+
+.day-toggle {
+  min-height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--ink);
+  font: 700 12px "DM Sans", sans-serif;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.day-toggle:focus-visible {
+  outline: 2px solid var(--purple);
+  outline-offset: 2px;
+}
+
 .mobile-sort-bar,
 .mobile-call-summary {
   display: none;
@@ -161,6 +182,7 @@
     gap: 6px 10px;
   }
 
+  .day-summary .day-toggle,
   .day-summary .export-button,
   .day-summary .clear-day {
     min-height: 44px;

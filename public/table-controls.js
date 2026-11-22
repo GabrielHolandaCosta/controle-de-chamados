@@ -1,6 +1,7 @@
 (() => {
   const sortStates = new Map();
   const mobileFilters = new Map();
+  const collapsedDays = new Set();
   const collator = new Intl.Collator('pt-BR', { sensitivity: 'base', numeric: true });
   let draggedRow = null;
   let pointerDrag = null;
@@ -301,9 +302,35 @@
     });
   }
 
+  function mountDayToggle(card, date) {
+    if (card.querySelector('.day-toggle')) return;
+    const content = card.querySelector('.table-scroll');
+    content.id = 'calls-' + date;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'day-toggle';
+    button.setAttribute('aria-controls', content.id);
+
+    function update() {
+      const collapsed = collapsedDays.has(date);
+      content.hidden = collapsed;
+      button.textContent = collapsed ? 'Expandir dia' : 'Recolher dia';
+      button.setAttribute('aria-expanded', String(!collapsed));
+    }
+
+    button.onclick = () => {
+      if (collapsedDays.has(date)) collapsedDays.delete(date);
+      else collapsedDays.add(date);
+      update();
+    };
+    card.querySelector('.day-summary .export-button').before(button);
+    update();
+  }
+
   function enhanceCard(card, date) {
     if (!date) return;
     card.dataset.date = date;
+    mountDayToggle(card, date);
     createMobileSortBar(card, date);
     card.querySelectorAll('.sort-toggle').forEach(button => {
       if (button.dataset.sortReady) return;
@@ -325,6 +352,9 @@
 
   const root = document.getElementById('days');
   if (!root) return;
+  document.getElementById('addRowButton').addEventListener('click', () => {
+    collapsedDays.delete(document.getElementById('newDate').value);
+  }, { capture: true });
   new MutationObserver(enhanceTables).observe(root, { childList: true });
   enhanceTables();
 })();
