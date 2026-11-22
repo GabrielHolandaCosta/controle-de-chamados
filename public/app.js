@@ -1,9 +1,9 @@
 const appScript = document.createElement('script');
-appScript.src = '/assets/js/app.js?v=3';
+appScript.src = '/assets/js/app.js?v=4';
 appScript.async = false;
 appScript.onload = () => {
   const tableControls = document.createElement('script');
-  tableControls.src = '/table-controls.js?v=4';
+  tableControls.src = '/table-controls.js?v=5';
   tableControls.onload = () => {
     const rowLocks = document.createElement('script');
     rowLocks.src = '/row-locks.js?v=4';

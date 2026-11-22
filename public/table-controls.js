@@ -82,7 +82,9 @@
     const previousState = current || null;
     if (current?.key === key && current.direction !== definition.initial) {
       sortStates.delete(date);
-      if (!await saveOrder(date, [...current.baseline], previousRows)) {
+      const restored = current.baseline.filter(row => previousRows.includes(row));
+      restored.push(...previousRows.filter(row => !restored.includes(row)));
+      if (!await saveOrder(date, restored, previousRows)) {
         sortStates.set(date, current);
       }
       render();
@@ -157,6 +159,13 @@
         '<span class="sort-arrow" aria-hidden="true">↕</span>';
       bar.append(button);
     });
+    const idleToggle = card.querySelector('.idle-toggle');
+    const idleButton = document.createElement('button');
+    idleButton.type = 'button';
+    idleButton.className = 'mobile-sort-option mobile-idle-button';
+    idleButton.textContent = idleToggle.title;
+    idleButton.onclick = () => idleToggle.click();
+    bar.append(idleButton);
     card.querySelector('.table-scroll').prepend(bar);
   }
 

@@ -5,30 +5,29 @@
   <title>Chamados realizados</title><link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
   <link rel="stylesheet" href="idle.css">
   <link rel="stylesheet" href="notes.css">
   <link rel="stylesheet" href="notes-polish.css?v=3">
   <link rel="stylesheet" href="theme.css?v=3">
   <link rel="stylesheet" href="table-controls.css?v=1">
   <link rel="stylesheet" href="session-guard.css?v=1">
-  <link rel="stylesheet" href="mobile.css?v=1">
   <link rel="stylesheet" href="row-locks.css?v=1">
+  <link rel="stylesheet" href="mobile.css?v=2">
   <script src="theme.js?v=1"></script>
   <script src="session-guard.js?v=3"></script>
 </head>
 <body>
   <main class="app-shell">
-    <header><a class="brand" href="#"><span>✓</span> chamados</a><span id="saveStatus">Preparando salvamento...</span></header>
+    <header><a class="brand" href="#"><span>✓</span> chamados</a><span id="saveStatus">Preparando salvamento...</span><button id="notesLauncher" class="notes-launcher" title="Abrir minhas notas" aria-label="Abrir minhas notas">
+    <span class="notes-launcher-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h9l3 3v14h-12z"/><path d="M15.5 3.5v3h3M9.5 11h6M9.5 15h6"/></svg></span>
+    <b class="notes-launcher-label">Notas</b>
+  </button></header>
     <section class="intro"><div><p class="eyebrow">CONTROLE DE ATENDIMENTOS</p><h1>Chamados <em>realizados</em></h1><p>Todos os seus registros, separados por data e sempre salvos automaticamente.</p></div><div class="total-box"><span>TEMPO TOTAL REGISTRADO</span><strong id="grandTotal">00:00</strong><small>todos os atendimentos</small></div></section>
     <section class="controls"><div class="control-block"><label for="newDate">Registrar atendimento para</label><input id="newDate" type="date"></div><button id="addRowButton" class="add-button">+ Adicionar chamado</button><div class="control-separator"></div><div class="control-block filter"><label for="filterDate">Filtrar por data</label><input id="filterDate" type="date"></div><button id="clearFilter" class="quiet-button">Ver todas as datas</button></section>
     <section id="days" class="days"></section>
     <div id="emptyState" class="empty"><span class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5.5h6M9.5 3.5h5a1 1 0 0 1 1 1v2h-7v-2a1 1 0 0 1 1-1Z"/><path d="M7 5.5H5.5a1.5 1.5 0 0 0-1.5 1.5v12a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19V7a1.5 1.5 0 0 0-1.5-1.5H17"/><path d="m8 14 2.2 2.2L16.5 10"/></svg></span><b>Nenhum chamado nesta visualização.</b><p>Escolha uma data acima e adicione o primeiro atendimento.</p></div>
   </main>
-  <button id="notesLauncher" class="notes-launcher" title="Abrir minhas notas" aria-label="Abrir minhas notas">
-    <span class="notes-launcher-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h9l3 3v14h-12z"/><path d="M15.5 3.5v3h3M9.5 11h6M9.5 15h6"/></svg></span>
-    <b class="notes-launcher-label">Notas</b>
-  </button>
   <section id="notesPanel" class="notes-panel" aria-hidden="true">
     <div class="notes-head"><div><p class="eyebrow">ESPAÇO PESSOAL</p><h2>Minhas notas</h2></div><button id="closeNotes" class="notes-close" aria-label="Fechar notas">×</button></div>
     <div class="notes-actions"><button id="newNote" class="notes-new">+ Nova nota</button><span id="notesSaveStatus">Suas notas ficam salvas na conta</span></div>
@@ -40,8 +39,8 @@
   <dialog id="rowDeleteDialog" class="row-delete-dialog"><form method="dialog"><span class="row-delete-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg></span><div><p class="eyebrow">EXCLUIR CHAMADO</p><h2>Tem certeza que deseja excluir?</h2><p class="row-delete-text">O atendimento <strong id="rowDeleteLabel"></strong> será removido. Essa ação não poderá ser desfeita.</p></div><div class="row-delete-actions"><button value="cancel" class="row-delete-cancel">Cancelar</button><button id="confirmRowDelete" value="default" class="row-delete-confirm">Sim, excluir</button></div></form></dialog>
   <dialog id="dayDeleteDialog" class="day-delete-dialog"><form method="dialog"><span class="day-delete-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg></span><div><p class="eyebrow">APAGAR O DIA</p><h2>Apagar todos os chamados?</h2><p class="day-delete-text">Você está prestes a excluir <strong id="dayDeleteCount"></strong> de <strong id="dayDeleteLabel"></strong>. Essa ação não poderá ser desfeita.</p></div><div class="day-delete-actions"><button value="cancel" class="day-delete-cancel">Cancelar</button><button id="confirmDayDelete" value="default" class="day-delete-confirm">Sim, apagar o dia</button></div></form></dialog>
   <template id="dayTemplate"><section class="day-card"><div class="day-head"><div><p class="eyebrow">ATENDIMENTOS DO DIA</p><h2 class="day-title"></h2></div><div class="day-summary"><span class="day-count"></span><strong class="day-total"></strong><button class="export-button">Exportar CSV ↓</button><button class="clear-day" title="Apagar chamados deste dia">×</button></div></div><div class="table-scroll"><table><thead><tr><th>ATENDIMENTO REALIZADOS</th><th>SOLICITANTE <button class="sort-toggle" data-sort="requester" type="button"><span class="sort-arrow">↕</span></button></th><th>SETOR SOLICITANTE <button class="sort-toggle" data-sort="department" type="button"><span class="sort-arrow">↕</span></button></th><th>CHAMADO ABERTO <button class="sort-toggle" data-sort="opened" type="button"><span class="sort-arrow">↕</span></button></th><th>INÍCIO <button class="sort-toggle" data-sort="start" type="button"><span class="sort-arrow">↕</span></button></th><th>FINAL <button class="sort-toggle" data-sort="end" type="button"><span class="sort-arrow">↕</span></button></th><th>OS <button class="sort-toggle" data-sort="os" type="button"><span class="sort-arrow">↕</span></button></th><th>TOTAL <button class="sort-toggle" data-sort="duration" type="button"><span class="sort-arrow">↕</span></button><button class="idle-toggle" title="Mostrar tempo parado" aria-label="Mostrar tempo parado">⌄</button></th><th class="idle-head" hidden>TEMPO PARADO</th><th></th></tr></thead><tbody></tbody><tfoot><tr><td colspan="7">TOTAL DO DIA</td><td class="footer-total">00:00</td><td class="idle-footer" hidden>PARADO: 00:00</td><td></td></tr></tfoot></table></div></section></template>
-  <template id="rowTemplate"><tr><td data-label="Atendimento realizado"><button class="row-drag" type="button" title="Arrastar atendimento" aria-label="Arrastar atendimento">⠿</button><input data-field="service" placeholder="Descreva o atendimento"></td><td data-label="Solicitante"><input data-field="requester" placeholder="Nome"></td><td data-label="Setor solicitante"><input data-field="department" placeholder="Setor"></td><td data-label="Chamado aberto"><select data-field="opened"><option value="SIM">SIM</option><option value="NÃO">NÃO</option></select></td><td data-label="Início"><input data-field="start" type="time"></td><td data-label="Final"><input data-field="end" type="time"></td><td data-label="OS"><input data-field="os" placeholder="Nº da OS"></td><td class="duration" data-label="Total">00:00</td><td class="idle-cell" data-label="Tempo parado" hidden>—</td><td><div class="row-actions"><button class="row-lock" type="button" title="Bloquear chamado" aria-label="Bloquear chamado"><span aria-hidden="true">○</span></button><button class="delete-row" title="Remover linha" aria-label="Remover atendimento">×</button></div></td></tr></template>
-  <script src="app.js?v=12"></script>
+  <template id="rowTemplate"><tr><td data-label="Atendimento realizado"><button class="row-drag" type="button" title="Arrastar atendimento" aria-label="Arrastar atendimento">⠿</button><input data-field="service" aria-label="Atendimento realizado" placeholder="Descreva o atendimento"></td><td data-label="Solicitante"><input data-field="requester" aria-label="Solicitante" placeholder="Nome"></td><td data-label="Setor solicitante"><input data-field="department" aria-label="Setor solicitante" placeholder="Setor"></td><td data-label="Chamado aberto"><select data-field="opened" aria-label="Chamado aberto"><option value="SIM">SIM</option><option value="NÃO">NÃO</option></select></td><td data-label="Início"><input data-field="start" aria-label="Início" type="time"></td><td data-label="Final"><input data-field="end" aria-label="Final" type="time"></td><td data-label="OS"><input data-field="os" aria-label="OS" placeholder="Nº da OS"></td><td class="duration" data-label="Total">00:00</td><td class="idle-cell" data-label="Tempo parado" hidden>—</td><td><div class="row-actions"><button class="row-lock" type="button" title="Bloquear chamado" aria-label="Bloquear chamado"><span aria-hidden="true">○</span></button><button class="delete-row" title="Remover linha" aria-label="Remover atendimento">×</button></div></td></tr></template>
+  <script src="app.js?v=13"></script>
   <script src="notes.js"></script>
   <script src="notes-controls.js?v=4"></script>
 </body>
