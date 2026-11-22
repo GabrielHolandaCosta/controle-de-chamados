@@ -1,5 +1,6 @@
 (() => {
   const sortStates = new Map();
+  const mobileFilters = new Map();
   const collator = new Intl.Collator('pt-BR', { sensitivity: 'base', numeric: true });
   let draggedRow = null;
   let pointerDrag = null;
@@ -75,12 +76,12 @@
     }
   }
 
-  async function sortDay(date, key) {
+  async function sortDay(date, key, requestedDirection) {
     const definition = definitions[key];
     const current = sortStates.get(date);
     const previousRows = [...records[date]];
     const previousState = current || null;
-    if (current?.key === key && current.direction !== definition.initial) {
+    if (current && (key === '' || (!requestedDirection && current.key === key && current.direction !== definition.initial))) {
       sortStates.delete(date);
       const restored = current.baseline.filter(row => previousRows.includes(row));
       restored.push(...previousRows.filter(row => !restored.includes(row)));
@@ -90,9 +91,10 @@
       render();
       return;
     }
-    const direction = current?.key === key
+    if (!definition) return;
+    const direction = requestedDirection || (current?.key === key
       ? current.direction === 'asc' ? 'desc' : 'asc'
-      : definition.initial;
+      : definition.initial);
     const baseline = current?.key === key ? current.baseline : previousRows;
     const nextRows = previousRows
       .map((row, index) => ({ row, index }))
@@ -140,33 +142,66 @@
     });
   }
 
-  function createMobileSortBar(card) {
+  function createMobileSortBar(card, date) {
     if (card.querySelector('.mobile-sort-bar')) return;
-    const bar = document.createElement('div');
-    bar.className = 'mobile-sort-bar';
-    bar.setAttribute('aria-label', 'Ordenar atendimentos');
-    const caption = document.createElement('span');
-    caption.className = 'mobile-sort-caption';
-    caption.textContent = 'Ordenar';
-    bar.append(caption);
-    Object.entries(definitions).forEach(([key, definition]) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.className = 'sort-toggle mobile-sort-option';
-      button.dataset.sort = key;
-      button.innerHTML =
-        '<span class="sort-label">' + definition.title + '</span>' +
-        '<span class="sort-arrow" aria-hidden="true">↕</span>';
-      bar.append(button);
-    });
+    const state = mobileFilters.get(date) || { open: false, status: '' };
+    const panel = document.createElement('details');
+    panel.className = 'mobile-sort-bar';
+    panel.open = state.open;
+    panel.innerHTML = '<summary>Filtros e ordenação</summary>' +
+      '<div class="mobile-sort-fields">' +
+      '<label>Chamado aberto<select><option value="">Todos</option><option value="SIM">Sim</option><option value="NÃO">Não</option></select></label>' +
+      '<label>Ordenar por<select><option value="">Ordem original</option></select></label>' +
+      '<label class="mobile-idle-option"><input type="checkbox"> Mostrar tempo parado</label>' +
+      '</div><p class="mobile-filter-empty" hidden>Nenhum chamado com esse filtro.</p>';
+    const [status, order] = panel.querySelectorAll('select');
+    const idle = panel.querySelector('input');
     const idleToggle = card.querySelector('.idle-toggle');
-    const idleButton = document.createElement('button');
-    idleButton.type = 'button';
-    idleButton.className = 'mobile-sort-option mobile-idle-button';
-    idleButton.textContent = idleToggle.title;
-    idleButton.onclick = () => idleToggle.click();
-    bar.append(idleButton);
-    card.querySelector('.table-scroll').prepend(bar);
+    const empty = panel.querySelector('.mobile-filter-empty');
+
+    function applyFilter() {
+      let visible = 0;
+      card.querySelectorAll('tbody tr').forEach(row => {
+        const matches = !state.status || row.querySelector('[data-field="opened"]').value === state.status;
+        row.classList.toggle('mobile-filtered-out', !matches);
+        if (matches) visible++;
+      });
+      empty.hidden = !state.status || visible > 0;
+      panel.querySelector('summary').textContent = state.status
+        ? 'Filtros e ordenação · 1 filtro'
+        : 'Filtros e ordenação';
+    }
+
+    status.value = state.status;
+    status.onchange = () => {
+      state.status = status.value;
+      mobileFilters.set(date, state);
+      applyFilter();
+    };
+    card.addEventListener('input', event => {
+      if (event.target.matches('[data-field="opened"]')) applyFilter();
+    });
+    panel.ontoggle = () => {
+      state.open = panel.open;
+      mobileFilters.set(date, state);
+    };
+
+    Object.entries(definitions).forEach(([key, definition]) => {
+      Object.entries(definition.labels).forEach(([direction, label]) => {
+        order.add(new Option(label, key + ':' + direction));
+      });
+    });
+    const active = sortStates.get(date);
+    order.value = active ? active.key + ':' + active.direction : '';
+    order.onchange = () => {
+      const [key, direction] = order.value.split(':');
+      order.disabled = true;
+      sortDay(date, key, direction);
+    };
+    idle.checked = !card.querySelector('.idle-footer').hidden;
+    idle.onchange = () => idleToggle.click();
+    card.querySelector('.table-scroll').prepend(panel);
+    applyFilter();
   }
 
   async function moveRow(date, fromIndex, targetIndex, placeAfter) {
@@ -269,7 +304,7 @@
   function enhanceCard(card, date) {
     if (!date) return;
     card.dataset.date = date;
-    createMobileSortBar(card);
+    createMobileSortBar(card, date);
     card.querySelectorAll('.sort-toggle').forEach(button => {
       if (button.dataset.sortReady) return;
       button.dataset.sortReady = 'true';
