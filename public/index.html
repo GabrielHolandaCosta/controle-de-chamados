@@ -16,13 +16,14 @@
   <link rel="stylesheet" href="mobile.css?v=6">
   <script src="theme.js?v=1"></script>
   <script src="session-guard.js?v=3"></script>
+  <link rel="stylesheet" href="/help.css?v=1"><script src="/help.js?v=1" defer></script>
 </head>
 <body>
   <main class="app-shell">
     <header><a class="brand" href="#"><span>✓</span> chamados</a><span id="saveStatus">Preparando salvamento...</span><button id="notesLauncher" class="notes-launcher" title="Abrir minhas notas" aria-label="Abrir minhas notas">
     <span class="notes-launcher-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h9l3 3v14h-12z"/><path d="M15.5 3.5v3h3M9.5 11h6M9.5 15h6"/></svg></span>
     <b class="notes-launcher-label">Notas</b>
-  </button></header>
+  </button><button type="button" id="helpButton" class="help-button" aria-label="Ajuda" title="Ajuda"><span aria-hidden="true">?</span><b>Ajuda</b></button></header>
     <section class="intro"><div><p class="eyebrow">CONTROLE DE ATENDIMENTOS</p><h1>Chamados <em>realizados</em></h1><p>Todos os seus registros, separados por data e sempre salvos automaticamente.</p></div><div class="total-box"><span>TEMPO TOTAL REGISTRADO</span><strong id="grandTotal">00:00</strong><small>todos os atendimentos</small></div></section>
     <section class="controls"><div class="control-block"><label for="newDate">Registrar atendimento para</label><input id="newDate" type="date"></div><button id="addRowButton" class="add-button">+ Adicionar chamado</button><div class="control-separator"></div><div class="control-block filter"><label for="filterDate">Filtrar por data</label><input id="filterDate" type="date"></div><button id="clearFilter" class="quiet-button">Ver todas as datas</button></section>
     <section id="days" class="days"></section>
