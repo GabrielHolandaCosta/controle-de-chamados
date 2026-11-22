@@ -106,12 +106,19 @@
       caption.textContent = original.labels?.[0]?.textContent.trim() ||
         original.getAttribute('aria-label') || original.placeholder;
       label.append(caption);
+      if (original.type === 'date') {
+        const date = document.createElement('time');
+        date.className = 'help-preview-date';
+        date.dateTime = '2026-11-16';
+        date.textContent = '16 de nov. de 2026';
+        label.append(date);
+        return label;
+      }
       const field = original.cloneNode(true);
       field.removeAttribute('id');
       field.removeAttribute('name');
       field.removeAttribute('data-field');
-      field.value = original.type === 'date' ? '2026-11-16' :
-        selector === '[data-field=service]' ? 'Instalação de aplicativo' : '';
+      field.value = selector === '[data-field=service]' ? 'Instalação de aplicativo' : '';
       label.append(field);
       return label;
     }
