@@ -238,3 +238,37 @@
 .help-preview-control .mobile-idle-option input {
   width: auto;
 }
+
+.help-preview-control .theme-toggle {
+  width: auto;
+  max-width: 100%;
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  white-space: nowrap;
+}
+
+.help-preview-control .theme-toggle-icon {
+  flex: 0 0 auto;
+}
+
+.help-preview-control .sort-toggle,
+.help-preview-control .idle-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.help-preview-control .sort-arrow {
+  display: block;
+  margin: 0;
+  line-height: 1;
+}
