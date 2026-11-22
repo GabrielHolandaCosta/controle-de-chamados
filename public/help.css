@@ -166,3 +166,75 @@
     height: 15px;
   }
 }
+
+.help-preview-control {
+  display: block;
+  overflow: hidden;
+}
+
+.help-preview-control small {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.help-preview-control input,
+.help-preview-control select {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--ink);
+  background: var(--paper);
+  font: inherit;
+}
+
+.help-preview-control table {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+.help-preview-control th {
+  height: auto;
+  min-width: 0;
+  padding: 3px;
+  overflow-wrap: anywhere;
+  font-size: 10px;
+}
+
+.help-preview-control .help-preview-notes {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 36px;
+}
+
+.help-preview-notes .notes-launcher-label,
+.help-preview-control .theme-toggle-label {
+  display: inline;
+  opacity: 1;
+  width: auto;
+}
+
+.help-preview-control .row-lock,
+.help-preview-control .delete-row {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+
+.help-preview-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.help-preview-control .mobile-idle-option input {
+  width: auto;
+}
