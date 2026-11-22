@@ -49,6 +49,10 @@
     justify-content: center;
   }
 
+  header .notes-launcher {
+    border-radius: 50%;
+  }
+
   header .theme-toggle-label,
   header .notes-launcher-label {
     display: none;
@@ -94,7 +98,9 @@
   }
 
   .controls .control-block:first-child,
-  .controls .add-button {
+  .controls .add-button,
+  .controls .filter,
+  .controls #clearFilter {
     grid-column: 1 / -1;
   }
 
@@ -121,6 +127,12 @@
     max-width: 100%;
     min-height: 44px;
     font-size: 16px;
+  }
+
+  .controls input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+    align-self: stretch;
   }
 
   .controls input::-webkit-date-and-time-value,
@@ -268,7 +280,7 @@
     align-items: center;
     gap: 3px 10px;
     min-height: 44px;
-    padding: 4px 38px 4px 3px;
+    padding: 4px 6px 4px 3px;
     border: 0;
     background: transparent;
     color: inherit;
@@ -317,11 +329,7 @@
   }
 
   .day-card .call-row .row-drag {
-    inset: 10px 6px auto auto;
-    width: 44px;
-    height: 44px;
-    opacity: 1;
-    touch-action: none;
+    display: none;
   }
 
   .day-card .call-row .row-actions {
