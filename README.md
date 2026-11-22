@@ -1,40 +1,26 @@
 # Controle de Chamados
 
-Sistema local para registrar chamados técnicos, organizar atendimentos por data e exportar relatórios em Excel.
+Sistema web para registrar chamados técnicos, acompanhar os atendimentos por data e exportar relatórios em Excel.
 
-## O que o sistema faz
+**[Acessar o Controle de Chamados no Railway](https://chamados-ti.up.railway.app/)**
 
-- Registra atendimentos com solicitante, setor, OS, horários e status.
-- Calcula a duração de cada chamado, o total diário e o tempo parado entre atendimentos.
-- Filtra e ordena os chamados por data e colunas.
-- Importa e exporta planilhas Excel.
-- Possui login e painel administrativo para criar e gerenciar usuários.
-- Salva os dados localmente no banco `data/chamados.db`.
+Entre com sua conta para consultar e registrar atendimentos. No celular, toque em um cartão para abrir os campos de edição. No computador, os chamados aparecem em tabela.
 
-## Como abrir
+## Funcionalidades
 
-1. Instale o Node.js LTS pelo site [nodejs.org](https://nodejs.org/).
-2. Dê dois cliques em `iniciar-servidor.bat`.
-3. Abra `http://localhost:3000/loginadm` no navegador.
+- Registro de atendimentos com solicitante, setor, OS, horários e status.
+- Cálculo de duração, total diário e tempo parado entre atendimentos.
+- Filtro por data, ordenação e bloqueio de chamados contra alterações.
+- Importação e exportação de planilhas Excel.
+- Notas pessoais e gerenciamento de usuários pelo painel administrativo.
 
-### Login de teste
+## Executar localmente
 
-- Usuário: `admin`
-- Senha: `123456`
+1. Instale o Node.js 22.5 ou superior.
+2. Na pasta do projeto, execute `npm start`. No Windows, também é possível abrir `iniciar-servidor.bat`.
+3. Acesse [http://localhost:3000/loginadm](http://localhost:3000/loginadm).
 
-## Estrutura
-
-```text
-public/                 Telas, estilos e scripts do sistema
-data/chamados.db        Banco de dados local
-server.js               Servidor local
-iniciar-servidor.bat    Iniciador para Windows
-package.json            Configuração do Node.js
-```
-
-## Backup
-
-Para guardar os dados, exporte os chamados em Excel e mantenha uma cópia do arquivo `data/chamados.db` com o servidor fechado.
+O servidor usa SQLite. Na execução local, o banco fica em `data/chamados.db`. Para fazer um backup completo local, copie esse arquivo com o servidor desligado. A exportação em Excel contém os chamados.
 
 ## Licença
 
