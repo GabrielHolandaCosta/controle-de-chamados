@@ -164,6 +164,46 @@
   }
 
   .day-head {
+    position: relative;
+  }
+
+  .day-head > div:first-child {
+    padding-inline-end: 48px;
+  }
+
+  .day-head .day-toggle {
+    position: absolute;
+    inset-block-start: 10px;
+    inset-inline-end: 10px;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--muted);
+  }
+
+  .day-toggle-label {
+    display: none;
+  }
+
+  .day-toggle::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-inline-end: 2px solid currentColor;
+    border-block-end: 2px solid currentColor;
+    transform: translateY(2px) rotate(225deg);
+  }
+
+  .day-toggle[aria-expanded="false"]::after {
+    transform: translateY(-2px) rotate(45deg);
+  }
+
+  .day-head {
     flex-direction: column;
     align-items: stretch;
     gap: 10px;
@@ -182,7 +222,6 @@
     gap: 6px 10px;
   }
 
-  .day-summary .day-toggle,
   .day-summary .export-button,
   .day-summary .clear-day {
     min-height: 44px;

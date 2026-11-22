@@ -309,12 +309,16 @@
     const button = document.createElement('button');
     button.type = 'button';
     button.className = 'day-toggle';
+    const label = document.createElement('span');
+    label.className = 'day-toggle-label';
+    button.append(label);
     button.setAttribute('aria-controls', content.id);
 
     function update() {
       const collapsed = collapsedDays.has(date);
       content.hidden = collapsed;
-      button.textContent = collapsed ? 'Expandir dia' : 'Recolher dia';
+      label.textContent = collapsed ? 'Expandir dia' : 'Recolher dia';
+      button.setAttribute('aria-label', label.textContent + ': ' + card.querySelector('.day-title').textContent);
       button.setAttribute('aria-expanded', String(!collapsed));
     }
 
