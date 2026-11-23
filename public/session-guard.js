@@ -1,7 +1,7 @@
 (() => {
   const originalFetch = window.fetch.bind(window);
   const draftTypes = {
-    '/api/calls': { key: 'chamados-pending-calls:', property: 'records' },
+    '/api/calls': { key: 'chamados-pending-calls:', property: 'records', extras: ['changedCallIds'] },
     '/api/notes': { key: 'chamados-pending-notes:', property: 'notes' }
   };
   let activeUsername = null;
@@ -54,6 +54,7 @@
       const requestId = Date.now() + '-' + ++draftSequence;
       storageSet(draftKey(type, username), JSON.stringify({
         value: body[type.property],
+        extras: Object.fromEntries((type.extras || []).map(key => [key, body[key]])),
         savedAt: Date.now(),
         requestId
       }));
@@ -125,7 +126,7 @@
         const response = await originalFetch(item.pathname, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ [item.type.property]: item.draft.value })
+          body: JSON.stringify({ [item.type.property]: item.draft.value, ...(item.draft.extras || {}) })
         });
         if (response.status === 401) {
           redirectToLogin();

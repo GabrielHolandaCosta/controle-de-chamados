@@ -6,7 +6,12 @@ appScript.onload = () => {
   tableControls.src = '/table-controls.js?v=8';
   tableControls.onload = () => {
     const rowLocks = document.createElement('script');
-    rowLocks.src = '/row-locks.js?v=4';
+    rowLocks.src = '/row-locks.js?v=5';
+    rowLocks.onload = () => {
+      const callLinks = document.createElement('script');
+      callLinks.src = '/call-links.js?v=1';
+      document.head.append(callLinks);
+    };
     document.head.append(rowLocks);
   };
   document.head.append(tableControls);

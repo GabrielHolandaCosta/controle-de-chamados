@@ -76,7 +76,7 @@
     found.row._locked = locked;
     enhanceRows();
     try {
-      await persist();
+      await persist([callId]);
       document.getElementById('saveStatus').textContent = locked ? 'Chamado bloqueado ✓' : 'Chamado desbloqueado ✓';
     } catch {
       found.row._locked = previous;
@@ -163,7 +163,7 @@
     const removedDate = records[found.date].length === 0;
     if (removedDate) delete records[found.date];
     try {
-      await persist();
+      await persist([callId]);
       render();
       document.getElementById('saveStatus').textContent = 'Chamado excluído ✓';
     } catch {
@@ -181,9 +181,10 @@
     dayDeleteDialog.close();
     if (!date || !records[date]) return;
     const backup = records[date];
+    const callIds = backup.map(row => row._id).filter(Boolean);
     delete records[date];
     try {
-      await persist();
+      await persist(callIds);
       render();
       document.getElementById('saveStatus').textContent = 'Chamados do dia excluídos ✓';
     } catch {

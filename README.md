@@ -13,6 +13,7 @@ Entre com sua conta para consultar e registrar atendimentos. No celular, toque e
 - Filtro por data, ordenação e bloqueio de chamados contra alterações.
 - Importação e exportação de planilhas Excel.
 - Notas pessoais e gerenciamento de usuários pelo painel administrativo.
+- Vinculação de chamados entre usuários, com a mesma linha sincronizada em tempo quase real.
 
 ## Executar localmente
 
