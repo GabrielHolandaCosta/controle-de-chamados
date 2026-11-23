@@ -127,6 +127,12 @@
   opacity: 1;
 }
 
+.help-preview-control:has(.row-drag) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .help-preview-control.is-primary, .help-dialog .help-next {
   background: #5146bf;
   border-color: #5146bf;
