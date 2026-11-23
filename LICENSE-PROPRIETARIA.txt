@@ -1,0 +1,7 @@
+Copyright (c) 2026 Gabriel Holanda. Todos os direitos reservados.
+
+Salvo autorização expressa e por escrito do titular, não é concedida licença para usar, copiar, modificar, distribuir, publicar, sublicenciar ou comercializar o código e a documentação deste projeto, ressalvados os direitos previstos em lei e os termos aplicáveis da plataforma GitHub.
+
+Versões anteriores publicadas sob a licença MIT continuam sujeitas aos direitos concedidos por aquela licença às pessoas que as receberam. Este aviso não revoga direitos previamente concedidos.
+
+Componentes de terceiros permanecem sujeitos às suas respectivas licenças.
