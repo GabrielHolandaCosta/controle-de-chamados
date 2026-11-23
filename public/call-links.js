@@ -79,13 +79,17 @@
 
   function renderConfirmation() {
     const unlinking = selectedAction === 'unlink';
+    const linkedPerson = unlinking ? linkedTo(selectedCallId).find(person => person.id === selectedUser.id) : null;
+    const removesRecipientCopy = Boolean(linkedPerson?.canRemoveCopy);
     confirmDialog.classList.toggle('is-unlinking', unlinking);
     confirmKicker.textContent = unlinking ? 'CONFIRMAR DESVINCULAÇÃO' : 'CONFIRMAR VINCULAÇÃO';
     confirmTitle.textContent = unlinking ? 'Desvincular este chamado?' : 'Vincular este chamado?';
     confirmName.textContent = `“${selectedUser.username}”`;
     confirmText.firstChild.textContent = unlinking ? 'Quer desvincular este chamado de ' : 'Quer vincular este chamado a ';
     confirmText.lastChild.textContent = unlinking
-      ? '? Os dois continuarão com uma cópia, mas as próximas alterações não serão mais sincronizadas.'
+      ? removesRecipientCopy
+        ? '? O chamado continuará na sua conta e será removido da conta dessa pessoa.'
+        : '? Cada pessoa continuará com sua cópia, mas as próximas alterações não serão mais sincronizadas.'
       : '? A pessoa receberá a linha completamente preenchida e as alterações ficarão sincronizadas.';
     confirmButton.textContent = unlinking ? 'Sim, desvincular' : 'Sim, vincular';
   }
@@ -118,7 +122,9 @@
       confirmDialog.close();
       enhanceRows();
       document.getElementById('saveStatus').textContent = unlinking
-        ? `Chamado desvinculado de ${result.username} ✓`
+        ? result.removedCopy
+          ? `Chamado removido da conta de ${result.username} ✓`
+          : `Sincronização com ${result.username} encerrada ✓`
         : `Chamado vinculado a ${result.username} ✓`;
     } catch (error) {
       document.getElementById('saveStatus').textContent = error.message;

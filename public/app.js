@@ -9,7 +9,7 @@ appScript.onload = () => {
     rowLocks.src = '/row-locks.js?v=5';
     rowLocks.onload = () => {
       const callLinks = document.createElement('script');
-      callLinks.src = '/call-links.js?v=2';
+      callLinks.src = '/call-links.js?v=3';
       document.head.append(callLinks);
     };
     document.head.append(rowLocks);

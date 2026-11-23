@@ -28,7 +28,7 @@
     {
       title: 'Vincular e organizar chamados',
       controls: ['.call-link-button', '.row-drag'],
-      tips: ['Clique em Vincular e escolha outro usuário para compartilhar o atendimento.', 'Para encerrar o compartilhamento, abra novamente e clique em Desvincular. A cópia de cada pessoa será mantida, mas deixará de sincronizar.', 'Arraste pelo ícone ⠿ para organizar sua própria lista. Essa ordem não muda para o outro usuário.']
+      tips: ['Clique em Vincular e escolha outro usuário para compartilhar o atendimento.', 'Se você criou o vínculo e o remover, o chamado some para quem recebeu. Se você recebeu e sair do vínculo, as duas cópias permanecem sem sincronização.', 'Arraste pelo ícone ⠿ para organizar sua própria lista. Essa ordem não muda para o outro usuário.']
     },
     {
       title: 'Encontrar e organizar',
