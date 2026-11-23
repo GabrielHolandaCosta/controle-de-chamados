@@ -27,6 +27,14 @@ const idlePanels=new Set();
 const mobileLayout = matchMedia('(max-width: 700px)');
 const expandedCalls = new WeakSet();
 
+function resizeServiceField(field) {
+  if (!field?.matches('textarea[data-field="service"]')) return;
+  field.style.height = '0px';
+  field.style.height = `${Math.max(40, field.scrollHeight)}px`;
+}
+
+document.addEventListener('input', event => resizeServiceField(event.target), true);
+
 function mountMobileSummary(fragment, row) {
   const element = fragment.querySelector('tr');
   const button = document.createElement('button');
