@@ -95,7 +95,7 @@
     const previousState = current || null;
     if (current && (key === '' || (!requestedDirection && current.key === key && current.direction !== definition.initial))) {
       sortStates.delete(date);
-      const restored = current.baseline.filter(row => previousRows.includes(row));
+      const restored = current.baseline.map(row => previousRows.find(item => item === row || item._id && item._id === row._id)).filter(Boolean);
       restored.push(...previousRows.filter(row => !restored.includes(row)));
       if (!await saveOrder(date, restored, previousRows)) {
         sortStates.set(date, current);

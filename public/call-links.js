@@ -161,14 +161,14 @@
       const data = await api('/api/calls');
       const recordsDiffer = JSON.stringify(data.records || {}) !== JSON.stringify(records);
       if (callsVersion === null && !recordsDiffer) callsVersion = data.updatedAt || null;
-      else if ((recordsDiffer || data.updatedAt && data.updatedAt !== callsVersion) && !editingNow()) {
+      else if (recordsDiffer && !editingNow()) {
         const scrollPosition = window.scrollY;
         records = data.records || {};
         callsVersion = data.updatedAt;
         render();
         requestAnimationFrame(() => window.scrollTo({ top: scrollPosition, behavior: 'auto' }));
         document.getElementById('saveStatus').textContent = 'Atualização compartilhada recebida ✓';
-      }
+      } else if (!recordsDiffer) callsVersion = data.updatedAt || callsVersion;
       const metadata = await api('/api/call-links');
       users = metadata.users || [];
       links = metadata.links || {};
