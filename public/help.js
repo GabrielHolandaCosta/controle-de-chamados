@@ -26,6 +26,11 @@
       tips: ['No celular, toque no cartão. No PC, edite direto na tabela.', 'Use o botão de bloqueio para proteger o registro.', 'O × remove o chamado após confirmação.']
     },
     {
+      title: 'Vincular e organizar chamados',
+      controls: ['.call-link-button', '.row-drag'],
+      tips: ['Clique em Vincular e escolha outro usuário para compartilhar o atendimento.', 'Para encerrar o compartilhamento, abra novamente e clique em Desvincular. A cópia de cada pessoa será mantida, mas deixará de sincronizar.', 'Arraste pelo ícone ⠿ para organizar sua própria lista. Essa ordem não muda para o outro usuário.']
+    },
+    {
       title: 'Encontrar e organizar',
       controls: ['#filterDate', '@order', '@day'],
       tips: ['Escolha uma data ou toque em Ver todas as datas.', 'No celular, abra Filtros e ordenação. No PC, use os cabeçalhos da tabela.', 'Recolha uma data pela seta no celular ou pelo botão no PC.']

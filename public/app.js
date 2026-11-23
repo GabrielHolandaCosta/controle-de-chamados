@@ -3,13 +3,13 @@ appScript.src = '/assets/js/app.js?v=4';
 appScript.async = false;
 appScript.onload = () => {
   const tableControls = document.createElement('script');
-  tableControls.src = '/table-controls.js?v=8';
+  tableControls.src = '/table-controls.js?v=9';
   tableControls.onload = () => {
     const rowLocks = document.createElement('script');
     rowLocks.src = '/row-locks.js?v=5';
     rowLocks.onload = () => {
       const callLinks = document.createElement('script');
-      callLinks.src = '/call-links.js?v=1';
+      callLinks.src = '/call-links.js?v=2';
       document.head.append(callLinks);
     };
     document.head.append(rowLocks);

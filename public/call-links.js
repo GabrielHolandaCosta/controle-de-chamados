@@ -3,6 +3,9 @@
   const pickerUsers = document.getElementById('callLinkUsers');
   const confirmDialog = document.getElementById('callLinkConfirmDialog');
   const confirmName = document.getElementById('callLinkConfirmName');
+  const confirmKicker = document.getElementById('callLinkConfirmKicker');
+  const confirmTitle = document.getElementById('callLinkConfirmTitle');
+  const confirmText = document.getElementById('callLinkConfirmText');
   const confirmButton = document.getElementById('confirmCallLink');
   if (!picker || !confirmDialog) return;
 
@@ -10,6 +13,7 @@
   let links = {};
   let selectedCallId = null;
   let selectedUser = null;
+  let selectedAction = 'link';
   let callsVersion = null;
   let checking = false;
 
@@ -38,7 +42,7 @@
       if (button.querySelector('span').textContent !== icon) button.querySelector('span').textContent = icon;
       if (button.querySelector('b').textContent !== label) button.querySelector('b').textContent = label;
       button.title = people.length
-        ? `Vinculado com ${people.map(person => person.username).join(', ')}. Clique para adicionar outra pessoa.`
+        ? `Vinculado com ${people.map(person => person.username).join(', ')}. Clique para gerenciar ou desvincular.`
         : 'Vincular chamado a outro usuário';
       button.disabled = !callId;
     });
@@ -57,11 +61,11 @@
       const item = document.createElement('button');
       item.type = 'button';
       item.className = 'call-link-user' + (alreadyLinked ? ' is-linked' : '');
-      item.disabled = alreadyLinked;
-      item.innerHTML = `<span class="call-link-avatar">${escapeUser(user.username.charAt(0).toUpperCase())}</span><span><b>${escapeUser(user.username)}</b><small>${alreadyLinked ? 'Já recebe este chamado' : 'Clique para vincular'}</small></span><i>${alreadyLinked ? '✓ Vinculado' : 'Vincular →'}</i>`;
+      item.innerHTML = `<span class="call-link-avatar">${escapeUser(user.username.charAt(0).toUpperCase())}</span><span><b>${escapeUser(user.username)}</b><small>${alreadyLinked ? 'Recebe e sincroniza este chamado' : 'Clique para vincular'}</small></span><i>${alreadyLinked ? 'Desvincular' : 'Vincular →'}</i>`;
       item.addEventListener('click', () => {
         selectedUser = user;
-        confirmName.textContent = `“${user.username}”`;
+        selectedAction = alreadyLinked ? 'unlink' : 'link';
+        renderConfirmation();
         picker.close();
         confirmDialog.showModal();
       });
@@ -71,6 +75,19 @@
 
   function escapeUser(value) {
     return String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+  }
+
+  function renderConfirmation() {
+    const unlinking = selectedAction === 'unlink';
+    confirmDialog.classList.toggle('is-unlinking', unlinking);
+    confirmKicker.textContent = unlinking ? 'CONFIRMAR DESVINCULAÇÃO' : 'CONFIRMAR VINCULAÇÃO';
+    confirmTitle.textContent = unlinking ? 'Desvincular este chamado?' : 'Vincular este chamado?';
+    confirmName.textContent = `“${selectedUser.username}”`;
+    confirmText.firstChild.textContent = unlinking ? 'Quer desvincular este chamado de ' : 'Quer vincular este chamado a ';
+    confirmText.lastChild.textContent = unlinking
+      ? '? Os dois continuarão com uma cópia, mas as próximas alterações não serão mais sincronizadas.'
+      : '? A pessoa receberá a linha completamente preenchida e as alterações ficarão sincronizadas.';
+    confirmButton.textContent = unlinking ? 'Sim, desvincular' : 'Sim, vincular';
   }
 
   document.addEventListener('click', event => {
@@ -90,22 +107,26 @@
     event.preventDefault();
     if (!selectedCallId || !selectedUser) return;
     confirmButton.disabled = true;
-    confirmButton.textContent = 'Vinculando…';
+    const unlinking = selectedAction === 'unlink';
+    confirmButton.textContent = unlinking ? 'Desvinculando…' : 'Vinculando…';
     try {
       const result = await api('/api/call-links', {
-        method: 'POST',
+        method: unlinking ? 'DELETE' : 'POST',
         body: JSON.stringify({ callId: selectedCallId, targetUserId: selectedUser.id })
       });
       links = result.links || links;
       confirmDialog.close();
       enhanceRows();
-      document.getElementById('saveStatus').textContent = `Chamado vinculado a ${result.username} ✓`;
+      document.getElementById('saveStatus').textContent = unlinking
+        ? `Chamado desvinculado de ${result.username} ✓`
+        : `Chamado vinculado a ${result.username} ✓`;
     } catch (error) {
       document.getElementById('saveStatus').textContent = error.message;
     } finally {
       confirmButton.disabled = false;
-      confirmButton.textContent = 'Sim, vincular';
+      confirmButton.textContent = unlinking ? 'Sim, desvincular' : 'Sim, vincular';
       selectedUser = null;
+      selectedAction = 'link';
     }
   });
 
@@ -114,6 +135,8 @@
   });
   confirmDialog.addEventListener('close', () => {
     selectedUser = null;
+    selectedAction = 'link';
+    confirmDialog.classList.remove('is-unlinking');
     selectedCallId = null;
   });
 

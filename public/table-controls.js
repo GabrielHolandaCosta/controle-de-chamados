@@ -68,7 +68,18 @@
   async function saveOrder(date, nextRows, previousRows) {
     records[date] = nextRows;
     try {
-      await persist();
+      const response = await fetch('/api/calls/order', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ records })
+      });
+      if (response.status === 401) {
+        location.href = '/loginadm';
+        throw new Error('Sessão encerrada');
+      }
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Não foi possível salvar a nova ordem.');
+      document.getElementById('saveStatus').textContent = 'Ordem salva para você ✓';
       return true;
     } catch {
       records[date] = previousRows;
