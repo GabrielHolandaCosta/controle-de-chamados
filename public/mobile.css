@@ -2,6 +2,17 @@
   display: none;
 }
 
+@media (max-width: 700px) {
+  tbody tr.call-row.is-locked,
+  html[data-theme="dark"] tbody tr.call-row.is-locked {
+    background: var(--paper);
+  }
+  tbody tr.call-row.is-locked td,
+  html[data-theme="dark"] tbody tr.call-row.is-locked td {
+    background: transparent !important;
+  }
+}
+
 .day-toggle {
   min-height: 32px;
   padding: 0 10px;
