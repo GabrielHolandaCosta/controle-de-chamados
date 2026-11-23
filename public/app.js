@@ -1,5 +1,5 @@
 const appScript = document.createElement('script');
-appScript.src = '/assets/js/app.js?v=4';
+appScript.src = '/assets/js/app.js?v=5';
 appScript.async = false;
 appScript.onload = () => {
   const tableControls = document.createElement('script');
@@ -9,7 +9,7 @@ appScript.onload = () => {
     rowLocks.src = '/row-locks.js?v=5';
     rowLocks.onload = () => {
       const callLinks = document.createElement('script');
-      callLinks.src = '/call-links.js?v=3';
+      callLinks.src = '/call-links.js?v=4';
       document.head.append(callLinks);
     };
     document.head.append(rowLocks);

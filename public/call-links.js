@@ -148,7 +148,9 @@
 
   function editingNow() {
     const active = document.activeElement;
-    return Boolean(active?.closest('#days') && active.matches('input,select,textarea')) ||
+    return Boolean(window.callsInteractionActive?.()) ||
+      picker.open || confirmDialog.open ||
+      Boolean(active?.closest('#days') && active.matches('input,select,textarea')) ||
       document.getElementById('saveStatus')?.textContent.includes('Salvando');
   }
 
@@ -181,6 +183,7 @@
   window.addEventListener('calls:saved', event => {
     if (event.detail?.updatedAt) callsVersion = event.detail.updatedAt;
   });
+  window.addEventListener('calls:interaction-ended', checkSharedUpdates);
 
   const observer = new MutationObserver(enhanceRows);
   observer.observe(document.getElementById('days'), { childList: true, subtree: true });
