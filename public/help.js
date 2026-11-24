@@ -21,19 +21,29 @@
       tips: ['Escolha a data do atendimento.', 'Toque em Adicionar chamado.', 'Preencha os campos. As alterações são salvas automaticamente.']
     },
     {
-      title: 'Editar ou proteger',
+      title: 'Editar e proteger',
       controls: ['[data-field=service]', '.row-lock', '.delete-row'],
-      tips: ['No celular, toque no cartão. No PC, edite direto na tabela.', 'Use o botão de bloqueio para proteger o registro.', 'O × remove o chamado após confirmação.']
+      tips: ['No celular, toque no chamado; no computador, edite na tabela.', 'Bloqueie para evitar alterações. Para desbloquear, confirme.', 'O × exclui o chamado após confirmação.']
+    },
+    {
+      title: 'Ver e copiar o texto',
+      controls: ['@preview', '@copy'],
+      tips: ['Toque nos três pontos para ver o atendimento completo.', 'Na janela, toque no ícone de copiar para copiar o texto.']
     },
     {
       title: 'Vincular e organizar chamados',
       controls: ['.call-link-button', '.row-drag'],
-      tips: ['Clique em Vincular e escolha outro usuário para compartilhar o atendimento.', 'Se você criou o vínculo e o remover, o chamado some para quem recebeu. Se você recebeu e sair do vínculo, as duas cópias permanecem sem sincronização.', 'Arraste pelo ícone ⠿ para organizar sua própria lista. Essa ordem não muda para o outro usuário.']
+      tips: ['Em Vincular, escolha a pessoa e confirme. As edições são compartilhadas.', 'Quem vinculou pode remover a cópia recebida; quem recebeu pode apenas parar a sincronização.', 'Arraste pelo ícone ⠿ para mudar a ordem só na sua conta.']
     },
     {
-      title: 'Encontrar e organizar',
-      controls: ['#filterDate', '@order', '@day'],
-      tips: ['Escolha uma data ou toque em Ver todas as datas.', 'No celular, abra Filtros e ordenação. No PC, use os cabeçalhos da tabela.', 'Recolha uma data pela seta no celular ou pelo botão no PC.']
+      title: 'Filtrar por data ou período',
+      controls: ['#filterDate', '.date-range-toggle', '@pin'],
+      tips: ['Escolha uma data, toque em Hoje ou em Ver todas as datas.', 'Em Período, escolha as datas inicial e final e aplique.', 'Toque em Fixar filtro para guardá-lo na conta; desfixe quando quiser.']
+    },
+    {
+      title: 'Organizar a visualização',
+      controls: ['@order', '@day'],
+      tips: ['No celular, abra Filtros e ordenação. No PC, use as setas da tabela.', 'Use a seta ou Recolher dia para esconder os chamados de uma data.']
     },
     {
       title: 'Conferir tempos e planilhas',
@@ -87,6 +97,10 @@
       '@idle': narrow.matches ? '☐ Mostrar tempo parado' : 'TOTAL  ↕  ⌄',
       '@excel': 'Exportar Excel ↓   Importar Excel ↑',
       '.day-total': 'Total do dia  03:55',
+      '@preview': '⋯  Ver atendimento completo',
+      '@copy': '▢  Copiar texto',
+      '@pin': 'Fixar filtro',
+      '.date-range-toggle': 'Período',
       'Editar': 'Editar',
       'Excluir': 'Excluir'
     };
