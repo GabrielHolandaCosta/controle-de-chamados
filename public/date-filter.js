@@ -18,6 +18,11 @@
   const end = dialog.querySelector('#rangeEnd');
   const pin = dialog.querySelector('.date-range-pin');
   const status = dialog.querySelector('.date-range-status');
+  const exportButton = document.createElement('button');
+  exportButton.type = 'button';
+  exportButton.className = 'date-range-export';
+  exportButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m-4-4 4 4 4-4M5 16v3h14v-3"/></svg> Exportar período';
+  dialog.querySelector('.date-range-actions').prepend(exportButton);
   let activeEnd = '', pinned = null, touched = false, busy = false;
   const refresh = () => {
     pin.textContent = pinned ? 'Desfixar filtro' : 'Fixar filtro';
@@ -41,6 +46,26 @@
   dialog.querySelector('.date-range-cancel').onclick = () => dialog.close();
   dialog.addEventListener('click', event => { if (event.target === dialog) dialog.close(); });
   dialog.querySelector('.date-range-apply').onclick = () => { if (!valid()) return; apply(); dialog.close(); };
+  exportButton.onclick = async () => {
+    if (!valid() || exportButton.disabled) return;
+    const groups = Object.entries(records).filter(([date, rows]) => date >= start.value && date <= end.value && Array.isArray(rows) && rows.length);
+    if (!groups.length) { status.textContent = 'Nenhum chamado encontrado nesse período.'; return; }
+    const initial = start.value, final = end.value;
+    exportButton.disabled = true;
+    exportButton.textContent = 'Preparando Excel…';
+    status.textContent = 'Preparando a planilha do período…';
+    try {
+      await exportExcel(`chamados-${initial}-a-${final}.xlsx`, groups);
+      status.textContent = document.getElementById('saveStatus').textContent === 'Excel exportado ✓'
+        ? 'Planilha do período exportada ✓'
+        : 'Não foi possível exportar. Verifique sua conexão e tente novamente.';
+    } catch {
+      status.textContent = 'Não foi possível exportar. Tente novamente.';
+    } finally {
+      exportButton.disabled = false;
+      exportButton.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m-4-4 4 4 4-4M5 16v3h14v-3"/></svg> Exportar período';
+    }
+  };
   pin.onclick = async () => {
     if (busy || (!pinned && !valid())) return;
     touched = true; busy = true; refresh();
