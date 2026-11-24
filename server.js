@@ -14,6 +14,8 @@ db.exec(`CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, username TEXT
 db.exec(`CREATE TABLE IF NOT EXISTS calls (user_id INTEGER PRIMARY KEY, content TEXT NOT NULL DEFAULT '{}', updated_at TEXT NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id));`);
 db.exec(`CREATE TABLE IF NOT EXISTS notes (user_id INTEGER PRIMARY KEY, content TEXT NOT NULL DEFAULT '[]', updated_at TEXT NOT NULL, FOREIGN KEY(user_id) REFERENCES users(id));`);
 db.exec(`CREATE TABLE IF NOT EXISTS help_seen (user_id INTEGER PRIMARY KEY, FOREIGN KEY(user_id) REFERENCES users(id));`);
+db.exec(`CREATE TABLE IF NOT EXISTS user_preferences (user_id INTEGER PRIMARY KEY, pinned_from TEXT, pinned_to TEXT, FOREIGN KEY(user_id) REFERENCES users(id));`);
+db.exec(`CREATE TRIGGER IF NOT EXISTS delete_user_preferences AFTER DELETE ON users BEGIN DELETE FROM user_preferences WHERE user_id=OLD.id; END;`);
 const hasSeenHelp = db.prepare('SELECT 1 FROM help_seen WHERE user_id = ?');
 const markHelpSeen = db.prepare('INSERT OR IGNORE INTO help_seen (user_id) VALUES (?)');
 db.exec(`CREATE TABLE IF NOT EXISTS call_links (call_id TEXT NOT NULL, user_id INTEGER NOT NULL, linked_by INTEGER NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY(call_id,user_id), FOREIGN KEY(user_id) REFERENCES users(id));`);
@@ -38,6 +40,9 @@ function syncLinkedCalls(userId,records,callIds){for(const callId of callIds){co
 
 const server=http.createServer(async(req,res)=>{ const url=new URL(req.url,`http://${req.headers.host}`), route=url.pathname;
   try {
+    if(route==='/api/date-filter'&&req.method==='GET'){const user=requireUser(req,res);if(!user)return;const row=db.prepare('SELECT pinned_from,pinned_to FROM user_preferences WHERE user_id=?').get(user.id);return send(res,200,{pinned:row?{from:row.pinned_from,to:row.pinned_to}:null});}
+    if(route==='/api/date-filter'&&req.method==='PUT'){const user=requireUser(req,res);if(!user)return;const {from,to}=await readBody(req);const valid=v=>typeof v==='string'&&/^\d{4}-\d{2}-\d{2}$/.test(v)&&!Number.isNaN(Date.parse(v+'T12:00:00Z'))&&new Date(v+'T12:00:00Z').toISOString().slice(0,10)===v;if(!valid(from)||!valid(to)||from>to)return send(res,400,{error:'Informe um período válido, com início antes do fim.'});db.prepare('INSERT INTO user_preferences(user_id,pinned_from,pinned_to) VALUES(?,?,?) ON CONFLICT(user_id) DO UPDATE SET pinned_from=excluded.pinned_from,pinned_to=excluded.pinned_to').run(user.id,from,to);return send(res,200,{pinned:{from,to}});}
+    if(route==='/api/date-filter'&&req.method==='DELETE'){const user=requireUser(req,res);if(!user)return;db.prepare('DELETE FROM user_preferences WHERE user_id=?').run(user.id);return send(res,200,{pinned:null});}
     if(route==='/api/session'&&req.method==='GET'){const user=userFrom(req); return send(res,200,{user:user||null,instanceId,helpSeen:user ? Boolean(hasSeenHelp.get(user.id)) : false});}
     if (route === '/api/help/seen' && req.method === 'PUT') {
       const user = requireUser(req, res);
