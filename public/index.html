@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="service-preview.css?v=2">
   <link rel="stylesheet" href="date-filter.css?v=4">
   <link rel="stylesheet" href="os-link.css?v=1">
+  <link rel="stylesheet" href="verdana-access.css?v=1">
   <script src="theme.js?v=1"></script>
   <script src="session-guard.js?v=4"></script>
   <link rel="stylesheet" href="/help.css?v=8"><script src="/help.js?v=7" defer></script>
@@ -28,7 +29,7 @@
     <span class="notes-launcher-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6.5 3.5h9l3 3v14h-12z"/><path d="M15.5 3.5v3h3M9.5 11h6M9.5 15h6"/></svg></span>
     <b class="notes-launcher-label">Notas</b>
   </button><button type="button" id="helpButton" class="help-button" aria-label="Ajuda" title="Ajuda"><span aria-hidden="true">?</span><b>Ajuda</b></button></header>
-    <section class="intro"><div><p class="eyebrow">CONTROLE DE ATENDIMENTOS</p><h1>Chamados <em>realizados</em></h1><p>Todos os seus registros, separados por data e sempre salvos automaticamente.</p></div><div class="total-box"><span>TEMPO TOTAL REGISTRADO</span><strong id="grandTotal">00:00</strong><small>todos os atendimentos</small></div></section>
+    <section class="intro"><div><p class="eyebrow">CONTROLE DE ATENDIMENTOS</p><h1>Chamados <em>realizados</em></h1><p>Todos os seus registros, separados por data e sempre salvos automaticamente.</p><a class="verdana-access" href="https://medradius.verdanadesk.com/plugins/formcreator/front/wizard.php" target="_blank" rel="noopener noreferrer" aria-label="Abrir chamado no Verdana, em outra aba"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/><path d="M17 3h4v4M21 3l-5 5"/></svg><span>Abrir chamado no Verdana</span><span class="verdana-access-arrow" aria-hidden="true">↗</span></a></div><div class="total-box"><span>TEMPO TOTAL REGISTRADO</span><strong id="grandTotal">00:00</strong><small>todos os atendimentos</small></div></section>
     <section class="controls"><div class="control-block"><label for="newDate">Registrar atendimento para</label><input id="newDate" type="date"></div><button id="addRowButton" class="add-button">+ Adicionar chamado</button><div class="control-separator"></div><div class="control-block filter"><label for="filterDate">Filtrar por data</label><input id="filterDate" type="date"></div><button id="clearFilter" class="quiet-button">Ver todas as datas</button></section>
     <section id="days" class="days"></section>
     <div id="emptyState" class="empty"><span class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 5.5h6M9.5 3.5h5a1 1 0 0 1 1 1v2h-7v-2a1 1 0 0 1 1-1Z"/><path d="M7 5.5H5.5a1.5 1.5 0 0 0-1.5 1.5v12a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 20 19V7a1.5 1.5 0 0 0-1.5-1.5H17"/><path d="m8 14 2.2 2.2L16.5 10"/></svg></span><b>Nenhum chamado nesta visualização.</b><p>Escolha uma data acima e adicione o primeiro atendimento.</p></div>
