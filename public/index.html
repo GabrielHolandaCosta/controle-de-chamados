@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="call-links.css?v=2">
   <link rel="stylesheet" href="service-preview.css?v=2">
   <link rel="stylesheet" href="date-filter.css?v=3">
+  <link rel="stylesheet" href="os-link.css?v=1">
   <script src="theme.js?v=1"></script>
   <script src="session-guard.js?v=4"></script>
   <link rel="stylesheet" href="/help.css?v=6"><script src="/help.js?v=7" defer></script>
@@ -48,6 +49,7 @@
   <template id="rowTemplate"><tr><td data-label="Atendimento realizado"><button class="row-drag" type="button" title="Arrastar atendimento" aria-label="Arrastar atendimento">⠿</button><input data-field="service" aria-label="Atendimento realizado" placeholder="Descreva o atendimento"></td><td data-label="Solicitante"><input data-field="requester" aria-label="Solicitante" placeholder="Nome"></td><td data-label="Setor solicitante"><input data-field="department" aria-label="Setor solicitante" placeholder="Setor"></td><td data-label="Chamado aberto"><select data-field="opened" aria-label="Chamado aberto"><option value="SIM">SIM</option><option value="NÃO">NÃO</option></select></td><td data-label="Início"><input data-field="start" aria-label="Início" type="time"></td><td data-label="Final"><input data-field="end" aria-label="Final" type="time"></td><td data-label="OS"><input data-field="os" aria-label="OS" placeholder="Nº da OS"></td><td class="duration" data-label="Total">00:00</td><td class="call-link-cell" data-label="Vincular"><button class="call-link-button" type="button" title="Vincular chamado a outro usuário" aria-label="Vincular chamado"><span aria-hidden="true">＋</span><b>Vincular</b></button></td><td class="idle-cell" data-label="Tempo parado" hidden>—</td><td><div class="row-actions"><button class="row-lock" type="button" title="Bloquear chamado" aria-label="Bloquear chamado"><span aria-hidden="true">○</span></button><button class="delete-row" title="Remover linha" aria-label="Remover atendimento">×</button></div></td></tr></template>
   <script src="app.js?v=20"></script>
   <script src="service-preview.js?v=2" defer></script>
+  <script src="os-link.js?v=1" defer></script>
   <script src="notes.js"></script>
   <script src="notes-controls.js?v=4"></script>
 </body>
