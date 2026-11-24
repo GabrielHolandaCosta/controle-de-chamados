@@ -130,7 +130,7 @@
 .help-preview-control:has(.row-drag) {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 
 .help-preview-control.is-primary, .help-dialog .help-next {
