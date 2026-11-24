@@ -20,7 +20,7 @@ html[data-theme="dark"] .user-table th,html[data-theme="dark"] .user-table td{ba
 html[data-theme="dark"] select option,html[data-theme="dark"] select optgroup{background:#20242e;color:#f5f7fa}
 html[data-theme="dark"] select option:checked{background:#655dd0;color:#fff}
 html[data-theme="dark"] input:-webkit-autofill,html[data-theme="dark"] input:-webkit-autofill:hover,html[data-theme="dark"] input:-webkit-autofill:focus{-webkit-text-fill-color:#edf0f4;box-shadow:0 0 0 1000px #13161d inset;caret-color:#edf0f4}
-html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator{filter:invert(1);opacity:.72;cursor:pointer}
+html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator{filter:none;opacity:.9;cursor:pointer}
 html[data-theme="dark"] ::selection{background:#7168df;color:#fff}
 html[data-theme="dark"] .delete-row{color:#aab2c0}html[data-theme="dark"] .delete-row:hover{color:#ff8595}
 html[data-theme="dark"] .idle-toggle{color:#aeb6c3}html[data-theme="dark"] .idle-toggle:hover{color:#b5aeff}
