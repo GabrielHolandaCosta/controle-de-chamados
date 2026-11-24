@@ -110,8 +110,8 @@
       '@idle': narrow.matches ? '.mobile-idle-option' : '.idle-toggle',
       '@excel': '.day-summary .export-button'
     };
-    const sourceSelector = actual[selector] || selector;
-    const original = findControl(sourceSelector);
+    const sourceSelector = actual[selector] || (selector.startsWith('@') ? null : selector);
+    const original = sourceSelector ? findControl(sourceSelector) : null;
     if ((!original || selector === '.day-total') && examples[selector]) {
       const text = document.createElement('span');
       text.textContent = examples[selector];
