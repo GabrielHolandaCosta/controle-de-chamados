@@ -3,7 +3,7 @@ appScript.src = '/assets/js/app.js?v=6';
 appScript.async = false;
 appScript.onload = () => {
   const dateFilter = document.createElement('script');
-  dateFilter.src = '/date-filter.js?v=1';
+  dateFilter.src = '/date-filter.js?v=2';
   document.head.append(dateFilter);
   const tableControls = document.createElement('script');
   tableControls.src = '/table-controls.js?v=10';
