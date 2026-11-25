@@ -12,7 +12,7 @@ appScript.onload = () => {
     rowLocks.src = '/row-locks.js?v=5';
     rowLocks.onload = () => {
       const callLinks = document.createElement('script');
-      callLinks.src = '/call-links.js?v=5';
+      callLinks.src = '/call-links.js?v=6';
       document.head.append(callLinks);
     };
     document.head.append(rowLocks);

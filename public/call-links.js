@@ -1,6 +1,7 @@
 (() => {
   const picker = document.getElementById('callLinkDialog');
   const pickerUsers = document.getElementById('callLinkUsers');
+  const search = document.getElementById('callLinkSearch');
   const confirmDialog = document.getElementById('callLinkConfirmDialog');
   const confirmName = document.getElementById('callLinkConfirmName');
   const confirmKicker = document.getElementById('callLinkConfirmKicker');
@@ -55,8 +56,15 @@
       pickerUsers.innerHTML = '<div class="call-link-empty"><b>Nenhum outro usuário disponível</b><span>Crie uma conta no painel administrativo para poder vincular.</span></div>';
       return;
     }
+    const normalize = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR').trim();
+    const query = normalize(search.value);
+    const matches = users.filter(user => normalize(user.username).includes(query));
+    if (!matches.length) {
+      pickerUsers.innerHTML = '<div class="call-link-empty"><b>Nenhum usuário encontrado</b><span>Tente buscar por outro nome.</span></div>';
+      return;
+    }
     pickerUsers.innerHTML = '';
-    users.forEach(user => {
+    matches.forEach(user => {
       const alreadyLinked = connectedIds.has(user.id);
       const item = document.createElement('button');
       item.type = 'button';
@@ -72,6 +80,9 @@
       pickerUsers.append(item);
     });
   }
+
+  search.addEventListener('input', renderUsers);
+  search.addEventListener('keydown', event => { if (event.key === 'Enter') event.preventDefault(); });
 
   function escapeUser(value) {
     return String(value || '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
@@ -103,8 +114,10 @@
     if (!rowElement?.dataset.callId) return;
     selectedCallId = rowElement.dataset.callId;
     selectedUser = null;
+    search.value = '';
     renderUsers();
     picker.showModal();
+    search.focus();
   }, true);
 
   confirmButton.addEventListener('click', async event => {
