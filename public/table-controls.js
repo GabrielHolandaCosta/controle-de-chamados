@@ -341,7 +341,7 @@
     <div class="collapse-head"><div><p class="collapse-kicker">ORGANIZAR DIAS</p><h2 id="collapseTitle">Quais dias recolher?</h2><p id="collapseDescription">Escolha como deseja organizar a visualização. Seus chamados continuam salvos.</p></div><button type="button" class="collapse-close" aria-label="Fechar">×</button></div>
     <fieldset class="collapse-options"><legend>Escolha uma opção</legend>
       <label><input type="radio" name="collapseChoice" value="one" checked><span><strong>Este dia</strong><small class="collapse-current"></small></span></label>
-      <label><input type="radio" name="collapseChoice" value="all"><span><strong>Todos os dias</strong><small>Inclui dias que estão fora do filtro atual.</small></span></label>
+      <label><input type="radio" name="collapseChoice" value="all"><span><strong>Todos, exceto hoje</strong><small>Mantém hoje aberto e inclui dias fora do filtro atual.</small></span></label>
       <label><input type="radio" name="collapseChoice" value="selected"><span><strong>Escolher dias</strong><small>Selecione somente as datas que deseja recolher.</small></span></label>
     </fieldset>
     <section class="collapse-picker" hidden><label for="collapseSearch">Buscar data</label><input id="collapseSearch" type="search" inputmode="numeric" placeholder="Ex.: 26/11/2026" autocomplete="off" aria-controls="collapseDates"><p class="collapse-count" aria-live="polite"></p><div id="collapseDates" class="collapse-dates"></div></section>
@@ -395,7 +395,14 @@
   collapseDialog.querySelector('form').addEventListener('submit', event => {
     event.preventDefault();
     const choice = collapseDialog.querySelector('input[name="collapseChoice"]:checked').value;
-    const dates = choice === 'all' ? allCallDates() : choice === 'selected' ? [...selectedDates] : [currentCollapseDate];
+    if (choice === 'all') {
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      collapsedDays.delete(today);
+      allCallDates().forEach(date => { if (date !== today) collapsedDays.add(date); });
+      updateVisibleDays(); collapseDialog.close(); return;
+    }
+    const dates = choice === 'selected' ? [...selectedDates] : [currentCollapseDate];
     if (!dates.length) { collapseError.textContent = 'Selecione pelo menos um dia para recolher.'; return; }
     const available = new Set(allCallDates()); dates.forEach(date => { if (available.has(date)) collapsedDays.add(date); });
     updateVisibleDays(); collapseDialog.close();

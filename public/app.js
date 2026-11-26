@@ -6,7 +6,7 @@ appScript.onload = () => {
   dateFilter.src = '/date-filter.js?v=3';
   document.head.append(dateFilter);
   const tableControls = document.createElement('script');
-  tableControls.src = '/table-controls.js?v=11';
+  tableControls.src = '/table-controls.js?v=12';
   tableControls.onload = () => {
     const rowLocks = document.createElement('script');
     rowLocks.src = '/row-locks.js?v=5';
