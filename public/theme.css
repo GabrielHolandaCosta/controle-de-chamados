@@ -19,6 +19,9 @@ html[data-theme="dark"] .login-page{background:radial-gradient(circle at 30% 10%
 html[data-theme="dark"] .user-table th,html[data-theme="dark"] .user-table td{background:#1a1e27;border-color:#303641;color:#e5e8ed}html[data-theme="dark"] .role{background:#302d54;color:#bcb5ff}html[data-theme="dark"] .action{background:#173523;color:#72da91}html[data-theme="dark"] .action.delete{background:#3b2028;color:#ff91a0}
 html[data-theme="dark"] select option,html[data-theme="dark"] select optgroup{background:#20242e;color:#f5f7fa}
 html[data-theme="dark"] select option:checked{background:#655dd0;color:#fff}
+/* Centraliza a resposta e as opções de chamado aberto. */
+select[data-field="opened"]{text-align:center;text-align-last:center}
+select[data-field="opened"] option{text-align:center}
 html[data-theme="dark"] input:-webkit-autofill,html[data-theme="dark"] input:-webkit-autofill:hover,html[data-theme="dark"] input:-webkit-autofill:focus{-webkit-text-fill-color:#edf0f4;box-shadow:0 0 0 1000px #13161d inset;caret-color:#edf0f4}
 html[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,html[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator{filter:none;opacity:.9;cursor:pointer}
 html[data-theme="dark"] ::selection{background:#7168df;color:#fff}
