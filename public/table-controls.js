@@ -313,6 +313,94 @@
     });
   }
 
+  function updateDayToggle(card, date) {
+    const content = card.querySelector('.table-scroll');
+    const button = card.querySelector('.day-toggle');
+    if (!content || !button) return;
+    const collapsed = collapsedDays.has(date);
+    content.hidden = collapsed;
+    const mobilePanel = card.querySelector('.mobile-sort-bar');
+    if (mobilePanel) mobilePanel.hidden = collapsed;
+    const label = button.querySelector('.day-toggle-label');
+    label.textContent = collapsed ? 'Expandir dia' : 'Recolher dia';
+    button.setAttribute('aria-label', label.textContent + ': ' + card.querySelector('.day-title').textContent);
+    button.setAttribute('aria-expanded', String(!collapsed));
+    if (collapsed) button.removeAttribute('aria-haspopup');
+    else button.setAttribute('aria-haspopup', 'dialog');
+  }
+
+  function updateVisibleDays() {
+    document.querySelectorAll('#days > .day-card').forEach(card => updateDayToggle(card, card.dataset.date));
+  }
+
+  const collapseDialog = document.createElement('dialog');
+  collapseDialog.className = 'collapse-dialog';
+  collapseDialog.setAttribute('aria-labelledby', 'collapseTitle');
+  collapseDialog.setAttribute('aria-describedby', 'collapseDescription');
+  collapseDialog.innerHTML = `<form class="collapse-form">
+    <div class="collapse-head"><div><p class="collapse-kicker">ORGANIZAR DIAS</p><h2 id="collapseTitle">Quais dias recolher?</h2><p id="collapseDescription">Escolha como deseja organizar a visualização. Seus chamados continuam salvos.</p></div><button type="button" class="collapse-close" aria-label="Fechar">×</button></div>
+    <fieldset class="collapse-options"><legend>Escolha uma opção</legend>
+      <label><input type="radio" name="collapseChoice" value="one" checked><span><strong>Este dia</strong><small class="collapse-current"></small></span></label>
+      <label><input type="radio" name="collapseChoice" value="all"><span><strong>Todos os dias</strong><small>Inclui dias que estão fora do filtro atual.</small></span></label>
+      <label><input type="radio" name="collapseChoice" value="selected"><span><strong>Escolher dias</strong><small>Selecione somente as datas que deseja recolher.</small></span></label>
+    </fieldset>
+    <section class="collapse-picker" hidden><label for="collapseSearch">Buscar data</label><input id="collapseSearch" type="search" inputmode="numeric" placeholder="Ex.: 26/11/2026" autocomplete="off" aria-controls="collapseDates"><p class="collapse-count" aria-live="polite"></p><div id="collapseDates" class="collapse-dates"></div></section>
+    <p class="collapse-error" role="status" aria-live="polite"></p>
+    <div class="collapse-actions"><button class="collapse-expand-all" type="button">Expandir todos</button><button class="collapse-cancel" type="button">Cancelar</button><button class="collapse-apply" type="submit">Recolher</button></div>
+  </form>`;
+  document.body.append(collapseDialog);
+  const collapsePicker = collapseDialog.querySelector('.collapse-picker');
+  const collapseSearch = collapseDialog.querySelector('#collapseSearch');
+  const collapseList = collapseDialog.querySelector('#collapseDates');
+  const collapseCount = collapseDialog.querySelector('.collapse-count');
+  const collapseError = collapseDialog.querySelector('.collapse-error');
+  const selectedDates = new Set();
+  let currentCollapseDate = null;
+
+  function allCallDates() { return Object.keys(records).filter(date => /^\d{4}-\d{2}-\d{2}$/.test(date)).sort().reverse(); }
+  function dateLabel(date) { return new Intl.DateTimeFormat('pt-BR', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}).format(new Date(date + 'T12:00:00')); }
+  function updateCollapseCount() { collapseCount.textContent = `${selectedDates.size} ${selectedDates.size === 1 ? 'dia selecionado' : 'dias selecionados'}`; }
+  function renderCollapseDates() {
+    const query = collapseSearch.value.trim().toLocaleLowerCase('pt-BR');
+    const digits = query.replace(/\D/g, '');
+    const dates = allCallDates().filter(date => {
+      const local = date.split('-').reverse().join('/');
+      return !query || date.includes(query) || local.includes(query) || dateLabel(date).toLocaleLowerCase('pt-BR').includes(query) || (digits && local.replace(/\D/g, '').includes(digits));
+    });
+    collapseList.replaceChildren();
+    if (!dates.length) { const empty = document.createElement('p'); empty.className = 'collapse-empty'; empty.textContent = 'Nenhuma data encontrada.'; collapseList.append(empty); }
+    dates.forEach(date => {
+      const label = document.createElement('label'); label.className = 'collapse-date';
+      const check = document.createElement('input'); check.type = 'checkbox'; check.value = date; check.checked = selectedDates.has(date);
+      check.addEventListener('change', () => { if (check.checked) selectedDates.add(date); else selectedDates.delete(date); collapseError.textContent = ''; updateCollapseCount(); });
+      const text = document.createElement('span'); const name = document.createElement('strong'); name.textContent = dateLabel(date); const detail = document.createElement('small'); detail.textContent = collapsedDays.has(date) ? 'Já está recolhido' : 'Está aberto'; text.append(name, detail); label.append(check, text); collapseList.append(label);
+    });
+    updateCollapseCount();
+  }
+  function showCollapseDialog(date) {
+    currentCollapseDate = date;
+    collapseDialog.querySelector('.collapse-current').textContent = dateLabel(date);
+    collapseDialog.querySelector('input[value="one"]').checked = true;
+    selectedDates.clear(); collapseSearch.value = ''; collapsePicker.hidden = true; collapseError.textContent = '';
+    collapseDialog.showModal();
+    collapseDialog.querySelector('input[value="one"]').focus();
+  }
+  collapseDialog.querySelectorAll('input[name="collapseChoice"]').forEach(input => input.addEventListener('change', () => { collapsePicker.hidden = input.value !== 'selected'; collapseError.textContent = ''; if (!collapsePicker.hidden) renderCollapseDates(); }));
+  collapseSearch.addEventListener('input', renderCollapseDates);
+  collapseSearch.addEventListener('keydown', event => { if (event.key === 'Enter') event.preventDefault(); });
+  collapseDialog.querySelector('.collapse-close').onclick = () => collapseDialog.close();
+  collapseDialog.querySelector('.collapse-cancel').onclick = () => collapseDialog.close();
+  collapseDialog.addEventListener('click', event => { if (event.target === collapseDialog) collapseDialog.close(); });
+  collapseDialog.querySelector('.collapse-expand-all').onclick = () => { collapsedDays.clear(); updateVisibleDays(); collapseDialog.close(); };
+  collapseDialog.querySelector('form').addEventListener('submit', event => {
+    event.preventDefault();
+    const choice = collapseDialog.querySelector('input[name="collapseChoice"]:checked').value;
+    const dates = choice === 'all' ? allCallDates() : choice === 'selected' ? [...selectedDates] : [currentCollapseDate];
+    if (!dates.length) { collapseError.textContent = 'Selecione pelo menos um dia para recolher.'; return; }
+    const available = new Set(allCallDates()); dates.forEach(date => { if (available.has(date)) collapsedDays.add(date); });
+    updateVisibleDays(); collapseDialog.close();
+  });
+
   function mountDayToggle(card, date) {
     if (card.querySelector('.day-toggle')) return;
     const content = card.querySelector('.table-scroll');
@@ -325,21 +413,12 @@
     button.append(label);
     button.setAttribute('aria-controls', content.id);
 
-    function update() {
-      const collapsed = collapsedDays.has(date);
-      content.hidden = collapsed;
-      label.textContent = collapsed ? 'Expandir dia' : 'Recolher dia';
-      button.setAttribute('aria-label', label.textContent + ': ' + card.querySelector('.day-title').textContent);
-      button.setAttribute('aria-expanded', String(!collapsed));
-    }
-
     button.onclick = () => {
-      if (collapsedDays.has(date)) collapsedDays.delete(date);
-      else collapsedDays.add(date);
-      update();
+      if (collapsedDays.has(date)) { collapsedDays.delete(date); updateDayToggle(card, date); }
+      else showCollapseDialog(date);
     };
     card.querySelector('.day-summary .export-button').before(button);
-    update();
+    updateDayToggle(card, date);
   }
 
   function enhanceCard(card, date) {
@@ -347,6 +426,7 @@
     card.dataset.date = date;
     mountDayToggle(card, date);
     createMobileSortBar(card, date);
+    updateDayToggle(card, date);
     card.querySelectorAll('.sort-toggle').forEach(button => {
       if (button.dataset.sortReady) return;
       button.dataset.sortReady = 'true';

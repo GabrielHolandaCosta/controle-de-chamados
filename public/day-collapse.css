@@ -1,0 +1,21 @@
+.day-card .mobile-sort-bar[hidden]{display:none!important}
+.collapse-dialog{width:min(540px,calc(100% - 28px));max-height:calc(100dvh - 28px);overflow:auto;padding:0;border:1px solid #dce2e6;border-radius:20px;background:#fff;color:#171a23;box-shadow:0 28px 90px rgba(10,16,28,.28)}
+.collapse-dialog::backdrop{background:rgba(15,18,27,.64);backdrop-filter:blur(4px)}
+.collapse-form{padding:24px}
+.collapse-head{display:flex;justify-content:space-between;align-items:start;gap:14px}
+.collapse-kicker{margin:0 0 7px;color:#6257db;font-size:10px;font-weight:800;letter-spacing:.14em}
+.collapse-head h2{margin:0;font:800 22px/1.2 Manrope,sans-serif;letter-spacing:-.5px}
+.collapse-head p:not(.collapse-kicker){margin:8px 0 0;color:#69717e;font-size:13px;line-height:1.5}
+.collapse-close{width:36px;height:36px;flex:none;border:1px solid #dce2e6;border-radius:10px;background:#f5f7f6;color:#535c68;font-size:21px;cursor:pointer}
+.collapse-options{display:grid;gap:8px;margin:19px 0 0;padding:0;border:0}.collapse-options legend{margin-bottom:9px;padding:0;font-size:12px;font-weight:800}
+.collapse-options label,.collapse-date{display:flex;align-items:center;gap:11px;padding:11px 12px;border:1px solid #dfe4e8;border-radius:11px;cursor:pointer}
+.collapse-options label:has(input:checked){border-color:#7166dc;background:#f4f2ff;box-shadow:inset 0 0 0 1px #7166dc}
+.collapse-options input,.collapse-date input{width:18px;height:18px;flex:none;margin:0;accent-color:#6257db}
+.collapse-options label span,.collapse-date span{display:grid;gap:3px;min-width:0}.collapse-options strong,.collapse-date strong{font-size:13px}.collapse-options small,.collapse-date small{font-size:11px;color:#737d89;line-height:1.35}
+.collapse-picker{margin-top:15px}.collapse-picker[hidden]{display:none}.collapse-picker>label{display:block;margin-bottom:6px;font-size:12px;font-weight:800}.collapse-picker>input{box-sizing:border-box;width:100%;min-height:43px;padding:9px 11px;border:1px solid #d8dfe4;border-radius:10px;background:#fff;color:#171a23;font:500 14px "DM Sans",sans-serif}
+.collapse-count{margin:10px 0 6px;color:#69717e;font-size:11px}.collapse-dates{display:grid;gap:6px;max-height:180px;overflow:auto;overscroll-behavior:contain}.collapse-date{padding:9px 11px}.collapse-empty{margin:0;padding:16px;text-align:center;color:#69717e;font-size:12px}
+.collapse-error{min-height:0;margin:0;color:#bf3f51;font-size:12px}.collapse-error:not(:empty){margin-top:10px}
+.collapse-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:20px}.collapse-actions button{min-height:42px;padding:9px 14px;border:1px solid #d9dee2;border-radius:10px;background:transparent;color:#39414c;font:700 12px "DM Sans",sans-serif;cursor:pointer}.collapse-actions .collapse-expand-all{margin-right:auto}.collapse-actions .collapse-apply{border-color:#6257db;background:#6257db;color:#fff}
+.collapse-dialog :is(button,input):focus-visible{outline:3px solid #9e95ff;outline-offset:2px}
+html[data-theme="dark"] .collapse-dialog{background:#191d27;border-color:#3b4250;color:#f0f2f6}html[data-theme="dark"] .collapse-head p:not(.collapse-kicker),html[data-theme="dark"] .collapse-options small,html[data-theme="dark"] .collapse-date small,html[data-theme="dark"] .collapse-count,html[data-theme="dark"] .collapse-empty{color:#aeb7c3}html[data-theme="dark"] .collapse-close,html[data-theme="dark"] .collapse-picker>input{background:#12161e;border-color:#414957;color:#f0f2f6}html[data-theme="dark"] .collapse-options label,html[data-theme="dark"] .collapse-date{border-color:#39414d}html[data-theme="dark"] .collapse-options label:has(input:checked){background:#292744;border-color:#9589ff;box-shadow:inset 0 0 0 1px #9589ff}html[data-theme="dark"] .collapse-actions button:not(.collapse-apply){border-color:#454c5b;color:#e5e9f0}html[data-theme="dark"] .collapse-kicker{color:#b2aaff}html[data-theme="dark"] .collapse-error{color:#ffabb6}
+@media(max-width:520px){.collapse-form{padding:20px}.collapse-head h2{font-size:20px}.collapse-actions{display:grid;grid-template-columns:1fr 1fr}.collapse-actions .collapse-expand-all{grid-column:1/-1;margin:0}.collapse-actions button{width:100%}.collapse-picker>input{font-size:16px}.collapse-dates{max-height:150px}}
