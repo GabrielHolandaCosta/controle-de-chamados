@@ -325,8 +325,7 @@
     label.textContent = collapsed ? 'Expandir dia' : 'Recolher dia';
     button.setAttribute('aria-label', label.textContent + ': ' + card.querySelector('.day-title').textContent);
     button.setAttribute('aria-expanded', String(!collapsed));
-    if (collapsed) button.removeAttribute('aria-haspopup');
-    else button.setAttribute('aria-haspopup', 'dialog');
+    button.setAttribute('aria-haspopup', 'dialog');
   }
 
   function updateVisibleDays() {
@@ -357,6 +356,7 @@
   const collapseError = collapseDialog.querySelector('.collapse-error');
   const selectedDates = new Set();
   let currentCollapseDate = null;
+  let dayAction = 'collapse';
 
   function allCallDates() { return Object.keys(records).filter(date => /^\d{4}-\d{2}-\d{2}$/.test(date)).sort().reverse(); }
   function dateLabel(date) { return new Intl.DateTimeFormat('pt-BR', {weekday:'long', day:'2-digit', month:'long', year:'numeric'}).format(new Date(date + 'T12:00:00')); }
@@ -378,8 +378,16 @@
     });
     updateCollapseCount();
   }
-  function showCollapseDialog(date) {
+  function showCollapseDialog(date, action) {
     currentCollapseDate = date;
+    dayAction = action;
+    const expanding = action === 'expand';
+    collapseDialog.querySelector('#collapseTitle').textContent = expanding ? 'Quais dias expandir?' : 'Quais dias recolher?';
+    collapseDialog.querySelector('input[value="all"]').closest('label').querySelector('small').textContent = expanding ? 'Expande todos, inclusive hoje e os dias fora do filtro.' : 'Recolhe todos, inclusive hoje e os dias fora do filtro.';
+    collapseDialog.querySelector('input[value="except_today"]').closest('label').querySelector('small').textContent = expanding ? 'Expande os demais dias; hoje continua como está.' : 'Mantém hoje aberto e inclui dias fora do filtro atual.';
+    collapseDialog.querySelector('input[value="selected"]').closest('label').querySelector('small').textContent = expanding ? 'Selecione somente as datas que deseja expandir.' : 'Selecione somente as datas que deseja recolher.';
+    collapseDialog.querySelector('.collapse-expand-all').hidden = expanding;
+    collapseDialog.querySelector('.collapse-apply').textContent = expanding ? 'Expandir' : 'Recolher';
     collapseDialog.querySelector('.collapse-current').textContent = dateLabel(date);
     collapseDialog.querySelector('input[value="one"]').checked = true;
     selectedDates.clear(); collapseSearch.value = ''; collapsePicker.hidden = true; collapseError.textContent = '';
@@ -399,13 +407,13 @@
     if (choice === 'except_today') {
       const now = new Date();
       const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-      collapsedDays.delete(today);
-      allCallDates().forEach(date => { if (date !== today) collapsedDays.add(date); });
+      if (dayAction === 'collapse') collapsedDays.delete(today);
+      allCallDates().forEach(date => { if (date !== today) { if (dayAction === 'expand') collapsedDays.delete(date); else collapsedDays.add(date); } });
       updateVisibleDays(); collapseDialog.close(); return;
     }
     const dates = choice === 'all' ? allCallDates() : choice === 'selected' ? [...selectedDates] : [currentCollapseDate];
-    if (!dates.length) { collapseError.textContent = 'Selecione pelo menos um dia para recolher.'; return; }
-    const available = new Set(allCallDates()); dates.forEach(date => { if (available.has(date)) collapsedDays.add(date); });
+    if (!dates.length) { collapseError.textContent = `Selecione pelo menos um dia para ${dayAction === 'expand' ? 'expandir' : 'recolher'}.`; return; }
+    const available = new Set(allCallDates()); dates.forEach(date => { if (available.has(date)) { if (dayAction === 'expand') collapsedDays.delete(date); else collapsedDays.add(date); } });
     updateVisibleDays(); collapseDialog.close();
   });
 
@@ -421,10 +429,7 @@
     button.append(label);
     button.setAttribute('aria-controls', content.id);
 
-    button.onclick = () => {
-      if (collapsedDays.has(date)) { collapsedDays.delete(date); updateDayToggle(card, date); }
-      else showCollapseDialog(date);
-    };
+    button.onclick = () => showCollapseDialog(date, collapsedDays.has(date) ? 'expand' : 'collapse');
     card.querySelector('.day-summary .export-button').before(button);
     updateDayToggle(card, date);
   }
