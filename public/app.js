@@ -1,5 +1,5 @@
 const appScript = document.createElement('script');
-appScript.src = '/assets/js/app.js?v=6';
+appScript.src = '/assets/js/app.js?v=7';
 appScript.async = false;
 appScript.onload = () => {
   const dateFilter = document.createElement('script');
