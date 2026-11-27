@@ -17,38 +17,43 @@
   ] : [
     {
       title: 'Registrar um chamado',
-      controls: ['#newDate', '#addRowButton', '[data-field=service]'],
-      tips: ['Escolha a data do atendimento.', 'Toque em Adicionar chamado.', 'Preencha os campos. As alterações são salvas automaticamente.']
+      controls: ['#newDate', '#addRowButton', '[data-field=opened]'],
+      tips: ['Escolha a data do atendimento.', 'Toque em Adicionar chamado e preencha os campos; o salvamento é automático.', 'Chamado aberto começa em NÃO. Troque para SIM quando necessário.']
     },
     {
-      title: 'Editar e proteger',
-      controls: ['[data-field=service]', '.row-lock', '.delete-row'],
-      tips: ['No celular, toque no chamado; no computador, edite na tabela.', 'Bloqueie para evitar alterações. Para desbloquear, confirme.', 'O × exclui o chamado após confirmação.']
+      title: 'Editar, copiar e proteger',
+      controls: ['@preview', '@copy', '.row-lock', '.delete-row'],
+      tips: ['No computador, edite na tabela; no celular, toque no chamado. Os três pontos mostram o texto completo.', 'Na janela do atendimento, use o ícone de copiar.', 'Bloqueie a linha para evitar alterações; confirme para desbloquear.', 'O × remove o chamado após confirmação.']
     },
     {
-      title: 'Ver e copiar o texto',
-      controls: ['@preview', '@copy'],
-      tips: ['Toque nos três pontos para ver o atendimento completo.', 'Na janela, toque no ícone de copiar para copiar o texto.']
-    },
-    {
-      title: 'Vincular e organizar chamados',
-      controls: ['.call-link-button', '.row-drag'],
-      tips: ['Em Vincular, escolha a pessoa e confirme. As edições são compartilhadas.', 'Quem vinculou pode remover a cópia recebida; quem recebeu pode apenas parar a sincronização.', 'Arraste pelo ícone ⠿ para mudar a ordem só na sua conta.']
+      title: 'Vincular e organizar',
+      controls: ['.call-link-button', '@searchUser', '.row-drag'],
+      tips: ['Em Vincular, pesquise a pessoa, selecione e confirme.', 'As edições são compartilhadas. Para desvincular, abra o mesmo botão e leia o aviso.', 'Arraste pelo ícone ⠿ para mudar a ordem apenas na sua conta.']
     },
     {
       title: 'Filtrar por data ou período',
       controls: ['#filterDate', '.date-range-toggle', '@pin'],
-      tips: ['Escolha uma data, toque em Hoje ou em Ver todas as datas.', 'Em Período, escolha as datas inicial e final e aplique.', 'Toque em Fixar filtro para guardá-lo na conta; desfixe quando quiser.']
+      tips: ['Escolha uma data, toque em Hoje ou em Ver todas as datas.', 'Em Período, escolha as datas inicial e final e aplique.', 'Use Fixar filtro para guardá-lo na conta; desfixe quando quiser.']
     },
     {
-      title: 'Organizar a visualização',
-      controls: ['@order', '@day'],
-      tips: ['No celular, abra Filtros e ordenação. No PC, use as setas da tabela.', 'Use a seta ou Recolher dia para esconder os chamados de uma data.']
+      title: 'Recolher e expandir dias',
+      controls: ['@day', '@dayOptions'],
+      tips: ['Toque em Recolher dia ou Expandir dia para abrir as opções.', 'Escolha este dia, todos, todos exceto hoje ou datas específicas.']
     },
     {
-      title: 'Conferir tempos e planilhas',
-      controls: ['.day-total', '@idle', '@excel'],
-      tips: ['O sistema calcula a duração pelos horários informados.', 'Ative o tempo parado nos filtros do celular ou no cabeçalho Total do PC.', 'Exporte um dia ou todos os chamados, ou importe uma planilha.']
+      title: 'Ordenação e tempos',
+      controls: ['@order', '.day-total', '@idle'],
+      tips: ['No celular, use Filtros e ordenação. No computador, as setas alternam a ordem e a desativam no terceiro clique.', 'O tempo de cada chamado é calculado pelos horários de início e fim.', 'Mostre o tempo parado pelos filtros do celular ou pela seta em Total no computador.']
+    },
+    {
+      title: 'Abrir chamado no Verdana',
+      controls: ['@os', '@verdana'],
+      tips: ['Na coluna OS, informe os 10 dígitos e use o ícone para abrir o chamado em outra aba.', 'Para criar um chamado, use Abrir chamado no Verdana. Entre na sua conta se solicitado.']
+    },
+    {
+      title: 'Importar e exportar Excel',
+      controls: ['@excel', '@rangeExport'],
+      tips: ['Exporte um dia ou todos os chamados, ou importe uma planilha.', 'Para exportar um intervalo, abra Período, escolha as datas e toque em Exportar período.']
     },
     {
       title: 'Usar notas e mudar o tema',
@@ -62,6 +67,7 @@
   dialog.setAttribute('aria-labelledby', 'helpTitle');
   dialog.innerHTML = '<div class="help-head"><h2 id="helpTitle">Guia rápido</h2>' +
     '<button type="button" class="help-close" aria-label="Fechar ajuda">×</button></div>' +
+    '<details class="help-topics"><summary>Ver assuntos</summary><nav aria-label="Assuntos do guia"></nav></details>' +
     '<h3 class="help-slide-title" tabindex="-1"></h3><div class="help-preview" aria-hidden="true"></div>' +
     '<ol class="help-instructions"></ol><div class="help-navigation">' +
     '<button type="button" class="help-prev">Voltar</button><span class="help-progress" aria-live="polite"></span>' +
@@ -74,6 +80,8 @@
   const previous = dialog.querySelector('.help-prev');
   const next = dialog.querySelector('.help-next');
   const progress = dialog.querySelector('.help-progress');
+  const topics = dialog.querySelector('.help-topics');
+  const topicsList = topics.querySelector('nav');
   let index = 0;
   let opened = false;
   let seen = false;
@@ -100,6 +108,11 @@
       '@preview': '⋯  Ver atendimento completo',
       '@copy': '▢  Copiar texto',
       '@pin': 'Fixar filtro',
+      '@searchUser': '⌕  Buscar usuário',
+      '@dayOptions': 'Este dia  ·  Todos  ·  Exceto hoje  ·  Escolher dias',
+      '@os': 'OS: 2026110770  ↗',
+      '@verdana': '↗  Abrir chamado no Verdana',
+      '@rangeExport': 'Período  →  Exportar período',
       '.date-range-toggle': 'Período',
       'Editar': 'Editar',
       'Excluir': 'Excluir'
@@ -137,7 +150,7 @@
       field.removeAttribute('id');
       field.removeAttribute('name');
       field.removeAttribute('data-field');
-      field.value = selector === '[data-field=service]' ? 'Instalação de aplicativo' : '';
+      field.value = selector === '[data-field=service]' ? 'Instalação de aplicativo' : selector === '[data-field=opened]' ? 'NÃO' : '';
       label.append(field);
       return label;
     }
@@ -157,6 +170,7 @@
       control.textContent = narrow.matches ? 'Segunda-feira, 16 de novembro  ⌃' : 'Recolher dia';
     }
     if (selector === '@excel') {
+      control.textContent = 'Exportar Excel ↓';
       const importButton = [...document.querySelectorAll('.controls .export-button')]
         .find(button => button.textContent.includes('Importar'));
       if (importButton) {
@@ -175,6 +189,14 @@
   function render() {
     const slide = slides[index];
     title.textContent = slide.title;
+    topicsList.replaceChildren(...slides.map((topic, topicIndex) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = `${topicIndex + 1}. ${topic.title}`;
+      if (topicIndex === index) button.setAttribute('aria-current', 'step');
+      button.addEventListener('click', () => { index = topicIndex; topics.open = false; render(); title.focus(); });
+      return button;
+    }));
     preview.replaceChildren(...slide.controls.map((selector, step) => {
       const row = document.createElement('div');
       row.className = 'help-preview-row';
@@ -201,6 +223,7 @@
     if (dialog.open) return;
     index = 0;
     opened = true;
+    topics.open = false;
     render();
     dialog.showModal();
     title.focus();
